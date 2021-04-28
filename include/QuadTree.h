@@ -26,7 +26,7 @@ protected:
     QTNode *sW;
     QTNode *sE;
     QTCorners area;
-    QTNodeData data;
+    QTNodeData *data;
 public:
     QTNode(QTCorners area);
     ~QTNode();
@@ -37,7 +37,7 @@ public:
 
 class QTree : public QTNode {
 public:
-    QTree();
+    QTree(QTCorners img_size);
 };
 
 #endif

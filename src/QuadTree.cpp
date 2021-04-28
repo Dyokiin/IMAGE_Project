@@ -44,6 +44,4 @@ QTNode::~QTNode(){
     delete this->data;
 }
 
-QTree::QTree(){
-    //tbd
-}
+QTree::QTree(QTCorners img_size) : QTNode(img_size){}
