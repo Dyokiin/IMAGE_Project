@@ -13,7 +13,6 @@ QTNodeData QTNodeDataMake(float x, float y, float height){
 }
 
 QTCorners QTCornersMake(float x1, float x2, float y1, float y2){
-
     QTCorners corners;
     corners.x1 = x1;
     corners.x2 = x2;
@@ -24,7 +23,6 @@ QTCorners QTCornersMake(float x1, float x2, float y1, float y2){
 }
 
 QTNode::QTNode(QTCorners corners){
-
     this->nW = NULL;
     this->nE = NULL;
     this->sE = NULL;
