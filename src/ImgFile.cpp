@@ -9,6 +9,9 @@
 #define DEFAULTZMIN 0
 #define DEFAULTZMAX 255
 
+std::string path = "/bin";
+std::string ext = ".timac";
+
 PgmFile::PgmFile(char* file){
     strcpy(file, this->file);
 }
@@ -63,4 +66,24 @@ TimacFile::TimacFile(char* file) : PgmFile(file){
     this->fov = DEFAULTFOV;
     this->znear = DEFAULTNEAR;
     this->zfar = DEFAULTFAR;
+}
+
+void TimacFile::buildFile(){
+    std::fstream timac;
+    std::string name = "";
+    name.append(path);
+    name.append(this->file);
+    name.append(ext);
+    timac.open(name);
+    if(timac.is_open()){
+        timac << this->file << std::endl;
+        timac << this->xsize << std::endl;
+        timac << this->ysize << std::endl;
+        timac << this->zmin << std::endl;
+        timac << this->zmax << std::endl;
+        timac << this->znear << std::endl;
+        timac << this->zfar << std::endl;
+        timac << this->fov << std::endl;
+        timac.close();
+    }
 }

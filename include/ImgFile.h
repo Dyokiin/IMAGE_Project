@@ -23,7 +23,7 @@ protected:
     int fov;
 public:
     TimacFile(char* file);
-    void buildFile(TimacFile file);
+    void buildFile();
 };
 
 
