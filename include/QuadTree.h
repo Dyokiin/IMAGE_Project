@@ -1,6 +1,8 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
 
+#include "ImgFile.h"
+
 
 typedef struct QTNodeData {
     float x;
@@ -38,6 +40,7 @@ public:
 class QTree : public QTNode {
 public:
     QTree(QTCorners img_size);
+    QTree QTreeMake(TimacFile file);
 };
 
 #endif
