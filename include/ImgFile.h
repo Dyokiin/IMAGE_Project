@@ -1,11 +1,13 @@
 #ifndef IMGFILE_H
 #define IMGFILE_H
 
+#include <string>
+
 class PgmFile{
 protected:
-    char file[32];
+    std::string file;
 public:
-    PgmFile(char* file);
+    PgmFile(std::string file);
 
     int getXSize();
     int getYSize();
@@ -22,7 +24,7 @@ protected:
     float zfar;
     int fov;
 public:
-    TimacFile(char* file);
+    TimacFile(std::string file);
     void buildFile();
 };
 
