@@ -10,8 +10,10 @@ protected:
     std::string label;
     int posx;
     int posy;
+    int size;
 public:
     Label(std::string label, int x, int y);
+    Label(std::string label, int x, int y, int size);
     void DrawLabel(SDL_Renderer *renderer);
     std::string get_label();
     int get_x();
@@ -27,20 +29,19 @@ public:
     Button(std::string label, int x, int y);
     bool is_hovered();
     int is_clicked();
+    void set_signal(int signal);
     void DrawButton(SDL_Renderer *renderer);
 };
 
-class Ui {
-protected:
-    Label *text[8];
-    Button *menu[8];
-public:
-    Ui();
-    void add(Label* Label);
-    void add(Button* Button);
-    void DrawUi(SDL_Renderer *renderer);
-};
+typedef struct Ui_element {
+    Label *label;
+    Button *button;
+    Ui_element *next;
+} element, *ui ;
 
+void add_label(ui menu, Label *label);
+void add_button(ui menu, Button *Button);
+void DrawUi(ui menu, SDL_Renderer *renderer);
 
 
 #endif
