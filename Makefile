@@ -1,10 +1,10 @@
 BIN = bin/image
-FLAGS = -Wall
+FLAGS = -Wall -g
 INC = 
-LIBS = -lglut -lGLU -lGL -lm `sdl-config --clfags --libs`
+LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0 -lSDL_ttf
 LIBDIR = 
 GCC = g++
-OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/Button.o obj/imageMain.o
+OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/userI.o obj/imageMain.o
 
 default: $(BIN)
 
@@ -22,7 +22,7 @@ obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 obj/imageMain.o: src/imageMain.cpp
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
-obj/Button.o: src/Button.cpp include/Button.h
+obj/userI.o: src/userI.cpp include/userI.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 
