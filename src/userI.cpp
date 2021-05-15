@@ -20,6 +20,10 @@ Label::Label(std::string label, int x, int y, int size){
     this->size = size;
 }
 
+void Label::set_label(std::string new_label){
+    this->label = new_label;
+}
+
 void Label::DrawLabel(SDL_Renderer *renderer){
 
     char *p = SDL_GetBasePath();

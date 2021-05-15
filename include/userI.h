@@ -15,6 +15,7 @@ public:
     Label(std::string label, int x, int y);
     Label(std::string label, int x, int y, int size);
     void DrawLabel(SDL_Renderer *renderer);
+    void set_label(std::string new_label);
     std::string get_label();
     int get_x();
     int get_y();

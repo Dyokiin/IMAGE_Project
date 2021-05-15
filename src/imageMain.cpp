@@ -8,6 +8,20 @@
 
 int main(int argc, char* argv[]){
 
+
+    QTree *center = new QTree(QTCornersMake(0,0,8,8));
+    QTNode a(QTNodePosMake(1,1), 1);
+    QTNode b(QTNodePosMake(2,5), 2);
+    QTNode c(QTNodePosMake(7,6), 3);
+    center->insert(&a);
+    center->insert(&b);
+    center->insert(&c);
+
+    std::cout << "Node a: " << center->search(QTNodePosMake(1,1)) << std::endl;
+    std::cout << "Node b: " << center->search(QTNodePosMake(2,5)) << std::endl;
+    std::cout << "Node c: " << center->search(QTNodePosMake(7,6)) << std::endl;
+
+
     SDL_Event event;
     bool quit = false;
     
@@ -24,22 +38,19 @@ int main(int argc, char* argv[]){
     SDL_Renderer *renderer =NULL;
     renderer = SDL_CreateRenderer(mainWin, -1, 0);
 
+
     if(mainWin){
 
-        std::string tests = "Quitter";
-        Button *test = new Button(tests, 400, 700);
-        test->set_signal(1);
+        std::string fps = "";
+        Label *fpsl = new Label(fps, 10,10,20);
 
-        std::string tests2 = "IMAGE Project";
-        Label *test2 = new Label(tests2, 100,100, 100);
 
-        ui menutest = (ui)malloc(sizeof(ui));
-        add_label(menutest, test2);
-        add_button(menutest, test);
+
 
 
 
         while(!quit){
+            Uint64 start = SDL_GetPerformanceCounter();
             SDL_WaitEvent(&event);
 
             switch (event.type)
@@ -47,21 +58,24 @@ int main(int argc, char* argv[]){
             case SDL_QUIT:
                 quit = true;
                 break;
-            
-            case SDL_MOUSEBUTTONDOWN:
-                if(test->is_clicked() == 1){
-                    quit = true;
-                }
-                break;
-
-            default:
-                break;
             }
 
-            test->DrawButton(renderer);
-            test2->DrawLabel(renderer);
-            //DrawUi(menutest, renderer);
+
+
+
+            fpsl->DrawLabel(renderer);
+
+
+
+
             SDL_RenderPresent(renderer);
+            SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+		    SDL_RenderClear(renderer);
+            SDL_SetRenderDrawColor(renderer,255,255,255,255);
+
+            Uint64 end = SDL_GetPerformanceCounter();
+            float elapsed = (end -start)/(float)SDL_GetPerformanceFrequency();
+            fpsl->set_label(std::to_string(1.0/elapsed));
         }
 
 

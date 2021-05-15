@@ -19,11 +19,13 @@ obj/QuadTree.o: src/QuadTree.cpp include/QuadTree.h
 obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
+obj/userI.o: src/userI.cpp include/userI.h
+	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
 obj/imageMain.o: src/imageMain.cpp
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
-obj/userI.o: src/userI.cpp include/userI.h
-	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
 
 
 clean:
