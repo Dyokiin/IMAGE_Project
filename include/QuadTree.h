@@ -5,47 +5,46 @@
 
 
 typedef struct QTNodePos {
-    float x;
-    float y;
+    int x;
+    int y;
 } QTNodePos;
 
-QTNodePos* QTNodePosMake(float x, float y);
+QTNodePos QTNodePosMake(int x, int y);
 
 typedef struct QTCorners {
-    float x1;
-    float x2;
-    float y1;
-    float y2;
+    int x1;
+    int x2;
+    int y1;
+    int y2;
 } QTCorners;
 
-QTCorners* QTCornersMake(float x1, float x2, float y1, float y2);
+QTCorners QTCornersMake(int x1, int y1, int x2, int y2);
 
 class QTNode {
 public:  
-    QTNodePos *Pos;
+    QTNodePos pos;
     float height;
 public:
     QTNode();
-    QTNode(QTNodePos* pos, float height);
+    QTNode(QTNodePos pos, float height);
     ~QTNode();
 };
 
 class QTree {
+    QTCorners area;
     QTNode *qtnode;
-    QTCorners *area;
     QTree *nW;
     QTree *nE;
     QTree *sW;
     QTree *sE;
 public:
     QTree();
-    QTree(QTCorners *area);
+    QTree(QTCorners area);
     ~QTree();
     QTree QTreeMake(TimacFile file);
-    void insert(QTNode *node);
-    QTCorners* getArea();
-    QTNode* search(QTNodePos *pos);
-    bool contain(QTNodePos *pos);
+    int insert(QTNode *node);
+    QTNode* search(QTNodePos pos);
+    bool contain(QTNodePos pos);
 };
 
 #endif

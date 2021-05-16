@@ -8,18 +8,20 @@
 
 int main(int argc, char* argv[]){
 
+    // QTree *center = new QTree(QTCornersMake(1,1,8,8));
 
-    QTree *center = new QTree(QTCornersMake(0,0,8,8));
-    QTNode a(QTNodePosMake(1,1), 1);
-    QTNode b(QTNodePosMake(2,5), 2);
-    QTNode c(QTNodePosMake(7,6), 3);
-    center->insert(&a);
-    center->insert(&b);
-    center->insert(&c);
+    // for(int i=0; i<=8;i++){
+    //     for(int j=0;j<=8;j++){
+    //         QTNode *a = new QTNode(QTNodePosMake(i,j), i*j);
+    //         center->insert(a);
+    //     }
+    // }
 
-    std::cout << "Node a: " << center->search(QTNodePosMake(1,1)) << std::endl;
-    std::cout << "Node b: " << center->search(QTNodePosMake(2,5)) << std::endl;
-    std::cout << "Node c: " << center->search(QTNodePosMake(7,6)) << std::endl;
+    // for(int i=1; i<=8;i++){
+    //     for(int j=1;j<=8;j++){
+    //         std::cout << "Node in pos : (" << i << "," << j << ") = " << center->search(QTNodePosMake(i,j)) << std::endl;
+    //     }
+    // }
 
 
     SDL_Event event;
@@ -45,10 +47,6 @@ int main(int argc, char* argv[]){
         Label *fpsl = new Label(fps, 10,10,20);
 
 
-
-
-
-
         while(!quit){
             Uint64 start = SDL_GetPerformanceCounter();
             SDL_WaitEvent(&event);
@@ -63,10 +61,9 @@ int main(int argc, char* argv[]){
 
 
 
+
+
             fpsl->DrawLabel(renderer);
-
-
-
 
             SDL_RenderPresent(renderer);
             SDL_SetRenderDrawColor(renderer, 0,0,0,255);

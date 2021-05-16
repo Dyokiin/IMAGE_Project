@@ -29,5 +29,5 @@ obj/imageMain.o: src/imageMain.cpp
 
 
 clean:
-	rm -f *.o $(BIN)
+	rm -f *.o $(OBJECTS)
 	find . -name "*~" -exec rm {} \;

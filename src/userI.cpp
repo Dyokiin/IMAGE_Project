@@ -20,6 +20,13 @@ Label::Label(std::string label, int x, int y, int size){
     this->size = size;
 }
 
+Label::Label(){
+    this->label = "";
+    this->posy = 0;
+    this->posx = 0;
+    this->size = BASESIZEFONT;
+}
+
 void Label::set_label(std::string new_label){
     this->label = new_label;
 }
@@ -66,10 +73,22 @@ int Label::get_y(){
     return this->posy;
 }
 
+void Label::set_x(int x){
+    this->posx = x;
+}
+
+void Label::set_y(int y){
+    this->posy = y;
+}
+
 Button::Button(std::string label, int x, int y) : Label(label, x, y){
     this->maxy = y+57;
     this->maxx = x+label.length()*25+5;
-    this->size = BASESIZEFONT;
+}
+
+Button::Button() : Label() {
+    this->maxx = 0;
+    this->maxy = 0;
 }
 
 bool Button::is_hovered(){
@@ -90,6 +109,12 @@ void Button::set_signal(int signal){
     this->signal = signal;
 }
 
+void Button::set_label(std::string label){
+    this->label = label;
+    this->maxx = this->posx+label.length()*25+5;
+    this->maxy = this->posy+57;
+}
+
 void Button::DrawButton(SDL_Renderer *renderer){
 
     if(this->is_hovered()){
@@ -108,37 +133,12 @@ void Button::DrawButton(SDL_Renderer *renderer){
     SDL_SetRenderDrawColor(renderer,255,255,255,255);
 }
 
-void add_button(ui menu, Button *button){
-    element* temp = menu;
-    while(temp->next != NULL){
-        temp = temp->next;
-    }
-    element *next = (element*)malloc(sizeof(element));
-    next->button = button;
-    next->label = NULL;
-    next->next = NULL;
-    temp->next = next;
+Ui::Ui() : Button() {
+    this->next = NULL;
 }
 
-void add_label(ui menu, Label *label){
-    element* temp = menu;
-    while(temp->next != NULL){
-        temp = temp->next;
-    }
-
-    element *next = (element*)malloc(sizeof(element));
-    next->label = label;
-    next->button = NULL;
-    next->next = NULL;
-    temp->next = next;
+Ui* Ui::get_next(){
+    return this->next;
 }
 
-void DrawUi(ui menu, SDL_Renderer *renderer){
-    element* temp = menu;
-    while(temp->next != NULL){
-        if(temp->button != NULL){temp->button->DrawButton(renderer);}
-        if(temp->label != NULL){temp->label->DrawLabel(renderer);}
-        
-        temp = temp->next;
-    }
-}
+
