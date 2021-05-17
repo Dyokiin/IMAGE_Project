@@ -10,6 +10,10 @@
 int main(int argc, char* argv[]){
 
     int currentMenu;
+    SDL_Rect rect;
+    rect.x = 64;
+    rect.y = 104;
+    rect.h = rect.w = 512;
 
     SDL_Event event;
     bool quit = false;
@@ -49,28 +53,34 @@ int main(int argc, char* argv[]){
                     break;
             
                 case SDL_MOUSEBUTTONDOWN:
-                    std::cout << currentUi->on_click() << std::endl;
                     switch (currentUi->on_click())
                     {
                         case 0:
                             if(currentMenu == 0){quit = true;}
                             else {
                                 currentMenu--;
-                                menuSwitch(currentMenu);
+                                currentUi = menuSwitch(currentMenu);
                             }
                             break;
                         case 1:
                             currentMenu++;
-                            menuSwitch(currentMenu);
+                            currentUi = menuSwitch(currentMenu);
                             break;
                         
                         default:
-                            gpgmMenu(currentUi->on_click());
+                            //currentUi->on_click();
                             break;
                     }
                     break;
             }
 
+            //GL INIT
+
+            if(currentMenu == 1){
+                SDL_RenderDrawRect(renderer, &rect);
+            }
+
+            //GL STOP
 
             currentUi->DrawUi(renderer);
             fpsl->DrawLabel(renderer);
@@ -84,10 +94,6 @@ int main(int argc, char* argv[]){
             float elapsed = (end -start)/(float)SDL_GetPerformanceFrequency();
             fpsl->set_label(std::to_string(1.0/elapsed));
         }
-
-
-
-
 
         SDL_DestroyWindow(mainWin);
     } else {

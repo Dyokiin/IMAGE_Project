@@ -8,7 +8,7 @@ Ui* menuSwitch(int targetMenu);
 
 Ui* mainMenu();
 Ui* helpMenu();
-Ui* gpgmMenu(int signal);
+Ui* gpgmMenu();
 Ui* imagMain();
 
 

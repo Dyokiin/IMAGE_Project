@@ -37,6 +37,7 @@ public:
     int is_clicked();
     void set_label(std::string label);
     void set_signal(int signal);
+    int get_signal();
     void DrawButton(SDL_Renderer *renderer);
 };
 

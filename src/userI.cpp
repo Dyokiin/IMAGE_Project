@@ -44,7 +44,7 @@ void Label::DrawLabel(SDL_Renderer *renderer){
     TTF_Init();
     TTF_Font *font = TTF_OpenFont(ttfpath.c_str(), this->size);
     SDL_Color color = {r,g,b,a};
-    SDL_Surface *surface = TTF_RenderText_Solid(font, this->label.c_str(), color);
+    SDL_Surface *surface = TTF_RenderText_Blended(font, this->label.c_str(), color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
     int textW = 5;
@@ -112,6 +112,10 @@ void Button::set_signal(int signal){
     this->signal = signal;
 }
 
+int Button::get_signal(){
+    return this->signal;
+}
+
 void Button::set_label(std::string label){
     this->label = label;
     this->maxx = this->posx+label.length()*25+5;
@@ -142,7 +146,7 @@ Ui::Ui() : Button() {
 
 Ui::Ui(Button *button) : Button(button->get_label(), button->get_x(), button->get_y()) {
     this->next = NULL;
-    this->signal = 0 ;
+    this->signal = button->get_signal();
 }
 
 Ui::Ui(Label *label) : Button(label->get_label(), label->get_x(), label->get_y()) {
@@ -190,7 +194,7 @@ int Ui::on_click(){
     if(this->is_clicked() != -1){
         return this->signal;
     } else if(this->next != NULL){
-        this->next->on_click();
+        return this->next->on_click();
     }
     return -1;
 }
