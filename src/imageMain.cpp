@@ -3,26 +3,13 @@
 #include "../include/QuadTree.h"
 #include "../include/ImgFile.h"
 #include "../include/userI.h"
+#include "../include/menus.h"
 
 
 
 int main(int argc, char* argv[]){
 
-    // QTree *center = new QTree(QTCornersMake(1,1,8,8));
-
-    // for(int i=0; i<=8;i++){
-    //     for(int j=0;j<=8;j++){
-    //         QTNode *a = new QTNode(QTNodePosMake(i,j), i*j);
-    //         center->insert(a);
-    //     }
-    // }
-
-    // for(int i=1; i<=8;i++){
-    //     for(int j=1;j<=8;j++){
-    //         std::cout << "Node in pos : (" << i << "," << j << ") = " << center->search(QTNodePosMake(i,j)) << std::endl;
-    //     }
-    // }
-
+    int currentMenu;
 
     SDL_Event event;
     bool quit = false;
@@ -35,7 +22,7 @@ int main(int argc, char* argv[]){
     SDL_Window* mainWin = NULL;
     mainWin = SDL_CreateWindow("IMAGE Project",SDL_WINDOWPOS_CENTERED,
                                                 SDL_WINDOWPOS_CENTERED,
-                                                1000, 1000,
+                                                1280, 720,
                                                 SDL_WINDOW_OPENGL);
     SDL_Renderer *renderer =NULL;
     renderer = SDL_CreateRenderer(mainWin, -1, 0);
@@ -43,9 +30,13 @@ int main(int argc, char* argv[]){
 
     if(mainWin){
 
+        currentMenu = 0;
+        Ui* currentUi = new Ui();
+
+        currentUi = mainMenu();
+
         std::string fps = "";
         Label *fpsl = new Label(fps, 10,10,20);
-
 
         while(!quit){
             Uint64 start = SDL_GetPerformanceCounter();
@@ -53,16 +44,35 @@ int main(int argc, char* argv[]){
 
             switch (event.type)
             {
-            case SDL_QUIT:
-                quit = true;
-                break;
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+            
+                case SDL_MOUSEBUTTONDOWN:
+                    std::cout << currentUi->on_click() << std::endl;
+                    switch (currentUi->on_click())
+                    {
+                        case 0:
+                            if(currentMenu == 0){quit = true;}
+                            else {
+                                currentMenu--;
+                                menuSwitch(currentMenu);
+                            }
+                            break;
+                        case 1:
+                            currentMenu++;
+                            menuSwitch(currentMenu);
+                            break;
+                        
+                        default:
+                            gpgmMenu(currentUi->on_click());
+                            break;
+                    }
+                    break;
             }
 
 
-
-
-
-
+            currentUi->DrawUi(renderer);
             fpsl->DrawLabel(renderer);
 
             SDL_RenderPresent(renderer);

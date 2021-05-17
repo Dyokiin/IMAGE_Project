@@ -4,7 +4,7 @@ INC =
 LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0 -lSDL2_ttf
 LIBDIR = 
 GCC = g++
-OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/userI.o obj/imageMain.o
+OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/userI.o obj/imageMain.o obj/menus.o
 
 default: $(BIN)
 
@@ -20,6 +20,9 @@ obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/userI.o: src/userI.cpp include/userI.h
+	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
+obj/menus.o: src/menus.cpp include/menus.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/imageMain.o: src/imageMain.cpp

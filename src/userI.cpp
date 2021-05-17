@@ -5,7 +5,6 @@
 
 #define BASESIZEFONT 40
 
-
 Label::Label(std::string label, int x, int y){
     this->label = label;
     this->posx = x;
@@ -73,6 +72,10 @@ int Label::get_y(){
     return this->posy;
 }
 
+int Label::get_size(){
+    return this->size;
+}
+
 void Label::set_x(int x){
     this->posx = x;
 }
@@ -137,8 +140,57 @@ Ui::Ui() : Button() {
     this->next = NULL;
 }
 
+Ui::Ui(Button *button) : Button(button->get_label(), button->get_x(), button->get_y()) {
+    this->next = NULL;
+    this->signal = 0 ;
+}
+
+Ui::Ui(Label *label) : Button(label->get_label(), label->get_x(), label->get_y()) {
+    this->next = NULL;
+    this->signal = -1;
+    this->size = label->get_size();
+}
+
 Ui* Ui::get_next(){
     return this->next;
 }
 
+void Ui::set_next(Ui* element){
+    this->next = element;
+}
 
+void Ui::add_button(Button* button){
+    if(this->next == NULL){
+        this->next = new Ui(button);
+        return;
+    }
+    this->next->add_button(button);
+}
+
+void Ui::add_label(Label *label){
+    if(this->next == NULL){
+        this->next = new Ui(label);
+        return;
+    }
+    this->next->add_label(label);
+}
+
+void Ui::DrawUi(SDL_Renderer *renderer){
+    if(this->next != NULL){
+        this->next->DrawUi(renderer);
+    }
+    if(this->signal == -1){
+        this->DrawLabel(renderer);
+    } else {
+        this->DrawButton(renderer);
+    }
+}
+
+int Ui::on_click(){
+    if(this->is_clicked() != -1){
+        return this->signal;
+    } else if(this->next != NULL){
+        this->next->on_click();
+    }
+    return -1;
+}

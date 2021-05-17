@@ -22,6 +22,7 @@ public:
     void set_y(int y);
     int get_x();
     int get_y();
+    int get_size();
 };
 
 class Button : public Label {
@@ -44,9 +45,14 @@ protected:
     Ui *next;
 public:
     Ui();
+    Ui(Button *button);
+    Ui(Label *label);
     Ui* get_next();
     void set_next(Ui* element);
     void DrawUi(SDL_Renderer *renderer);
+    void add_button(Button *button);
+    void add_label(Label *label);
+    int on_click();
 };
 
 
