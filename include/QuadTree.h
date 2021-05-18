@@ -4,43 +4,47 @@
 #include "ImgFile.h"
 
 
-typedef struct QTNodeData {
-    float x;
-    float y;
-    float height;
-} QTNodeData;
+typedef struct QTNodePos {
+    int x;
+    int y;
+} QTNodePos;
 
-QTNodeData QTNodeDataMake(float x, float y, float height);
+QTNodePos QTNodePosMake(int x, int y);
 
 typedef struct QTCorners {
-    float x1;
-    float x2;
-    float y1;
-    float y2;
+    int x1;
+    int x2;
+    int y1;
+    int y2;
 } QTCorners;
 
-QTCorners QTCornersMake(float x1, float x2, float y1, float y2);
+QTCorners QTCornersMake(int x1, int y1, int x2, int y2);
 
-class QTNode { 
-protected:    
-    QTNode *nW;
-    QTNode *nE;
-    QTNode *sW;
-    QTNode *sE;
-    QTCorners area;
-    QTNodeData *data;
+class QTNode {
+public:  
+    QTNodePos pos;
+    float height;
 public:
-    QTNode(QTCorners area);
+    QTNode();
+    QTNode(QTNodePos pos, float height);
     ~QTNode();
-
-    QTNodeData getData();
-    QTCorners getArea();
 };
 
-class QTree : public QTNode {
+class QTree {
+    QTCorners area;
+    QTNode *qtnode;
+    QTree *nW;
+    QTree *nE;
+    QTree *sW;
+    QTree *sE;
 public:
-    QTree(QTCorners img_size);
+    QTree();
+    QTree(QTCorners area);
+    ~QTree();
     QTree QTreeMake(TimacFile file);
+    int insert(QTNode *node);
+    QTNode* search(QTNodePos pos);
+    bool contain(QTNodePos pos);
 };
 
 #endif

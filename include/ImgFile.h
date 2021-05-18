@@ -11,6 +11,7 @@ public:
 
     int getXSize();
     int getYSize();
+    void builPgm(int mode);
 
 };
 
@@ -26,6 +27,7 @@ protected:
 public:
     TimacFile(std::string file);
     void buildFile();
+    
 };
 
 
