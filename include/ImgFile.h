@@ -11,6 +11,7 @@ public:
 
     int getXSize();
     int getYSize();
+    void builPgm(int mode);
 
 };
 

@@ -6,6 +6,7 @@
 #include "../include/menus.h"
 
 Ui* menuSwitch(int targetMenu){
+    
     switch (targetMenu)
     {
     case 0:
@@ -145,6 +146,7 @@ Ui* helpMenu(){
     Label *Lh8 = new Label(help8, 320, 560);
 
     Ui* HelpMenu = new Ui(Quit);
+
     HelpMenu->add_label(Lh1);
     HelpMenu->add_label(Lh2);
     HelpMenu->add_label(Lh3);
