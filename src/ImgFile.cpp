@@ -33,31 +33,36 @@ QTree* PgmFile::parse(){
         for(i=0;i<3;i++){std::getline(image, line);}
         int j=0;
         while(line[j] != ' '){
+            std::cout << line[j] << std::endl;
             this->xsize*=10;
-            this->xsize+=line[j];
+            this->xsize+=(int)line[j]-48;
             j++;
+            std::cout << xsize << std::endl;
         }
+        std::cout << " " << std::endl;
         j++;
-        while(line[j] != '\n'){
+        while(line[j] != 0){
+            std::cout << line[j] << std::endl;
             this->ysize*=10;
-            this->ysize+=line[j];
+            this->ysize+=(int)line[j]-48;
+            std::cout << ysize << std::endl;
             j++;
         }
+        std::getline(image, line);
         std::getline(image, line);
         int value, l;
         QTree *qtree = new QTree(QTCornersMake(0, 0, this->xsize, this->ysize));
         int x, y;
 
-        for(x = 0; this->xsize; x++){
+        for(x = 0; x<=this->xsize; x++){
 
-            for(y = 0; this->ysize; y++){
+            for(y = 0; y<=this->ysize; y++){
                 value = 0;
                 l=0;
-                
 
-                while(line[l] != '\n'){
+                while(line[l] != 0){
                     value*=10;
-                    value+=line[l];
+                    value+=(int)line[l]-48;
                     l++;
                 }
                 QTNode* qnode = new QTNode(QTNodePosMake(x, y), value);

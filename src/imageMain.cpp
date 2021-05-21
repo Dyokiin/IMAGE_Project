@@ -34,11 +34,12 @@ int main(int argc, char* argv[]){
     
     char *p = SDL_GetBasePath();
     std::string pgmpath = std::string(p) + "../ressources/height_map.pgm";
-
     PgmFile* pgm = new PgmFile(pgmpath);
     free(p);
+
     QTree* qtree = pgm->parse();
     //QTree* qtree = generateRandomQT(25, 25);
+
     for(int i = 0; i< 100; i++){
         
         for(int j = 0; j < 100; j++){
@@ -48,10 +49,6 @@ int main(int argc, char* argv[]){
             } else {
                 std::cout << "error" << " ";
             }
-
-            
-            
-
             
         }
 
@@ -122,7 +119,6 @@ int main(int argc, char* argv[]){
             float elapsed = (end -start)/(float)SDL_GetPerformanceFrequency();
             fpsl->set_label(std::to_string(1.0/elapsed));
 
-            SDL_Delay(30);
         }
 
         SDL_DestroyWindow(mainWin);
