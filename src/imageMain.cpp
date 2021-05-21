@@ -4,6 +4,7 @@
 #include "../include/ImgFile.h"
 #include "../include/userI.h"
 #include "../include/menus.h"
+#include "../include/ImgGen.h"
 
 
 
@@ -30,6 +31,33 @@ int main(int argc, char* argv[]){
                                                 SDL_WINDOW_OPENGL);
     SDL_Renderer *renderer =NULL;
     renderer = SDL_CreateRenderer(mainWin, -1, 0);
+    
+    char *p = SDL_GetBasePath();
+    std::string pgmpath = std::string(p) + "../ressources/height_map.pgm";
+
+    PgmFile* pgm = new PgmFile(pgmpath);
+    free(p);
+    QTree* qtree = pgm->parse();
+    //QTree* qtree = generateRandomQT(25, 25);
+    for(int i = 0; i< 100; i++){
+        
+        for(int j = 0; j < 100; j++){
+
+            if(qtree->search(QTNodePosMake(i, j)) != NULL){
+                std::cout << qtree->search(QTNodePosMake(i, j))->height << " ";
+            } else {
+                std::cout << "error" << " ";
+            }
+
+            
+            
+
+            
+        }
+
+        std::cout << std::endl;
+        
+    }
 
 
     if(mainWin){
@@ -93,6 +121,8 @@ int main(int argc, char* argv[]){
             Uint64 end = SDL_GetPerformanceCounter();
             float elapsed = (end -start)/(float)SDL_GetPerformanceFrequency();
             fpsl->set_label(std::to_string(1.0/elapsed));
+
+            SDL_Delay(30);
         }
 
         SDL_DestroyWindow(mainWin);

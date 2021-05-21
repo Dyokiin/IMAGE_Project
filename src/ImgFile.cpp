@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
+#include "../include/QuadTree.h"
 #include "../include/ImgFile.h"
+
 
 #define DEFAULTFOV  70
 #define DEFAULTNEAR 0
@@ -14,6 +16,64 @@ std::string ext = ".timac";
 
 PgmFile::PgmFile(std::string file){
     this->file = file;
+
+}
+
+QTree* PgmFile::parse(){
+    
+    std::string line;
+
+    this->xsize = 0;
+    this->ysize = 0;
+    
+    std::fstream image;
+    image.open(this->file);
+    if(image.is_open()){
+        int i;
+        for(i=0;i<3;i++){std::getline(image, line);}
+        int j=0;
+        while(line[j] != ' '){
+            this->xsize*=10;
+            this->xsize+=line[j];
+            j++;
+        }
+        j++;
+        while(line[j] != '\n'){
+            this->ysize*=10;
+            this->ysize+=line[j];
+            j++;
+        }
+        std::getline(image, line);
+        int value, l;
+        QTree *qtree = new QTree(QTCornersMake(0, 0, this->xsize, this->ysize));
+        int x, y;
+
+        for(x = 0; this->xsize; x++){
+
+            for(y = 0; this->ysize; y++){
+                value = 0;
+                l=0;
+                
+
+                while(line[l] != '\n'){
+                    value*=10;
+                    value+=line[l];
+                    l++;
+                }
+                QTNode* qnode = new QTNode(QTNodePosMake(x, y), value);
+
+                qtree->insert(qnode);
+                std::getline(image, line);
+            }
+
+        }
+
+        image.close();
+        return qtree;
+    } else {
+        return NULL;
+    }
+    
 }
 
 int PgmFile::getXSize(){
@@ -29,6 +89,10 @@ int PgmFile::getXSize(){
             xsize*=10;
             xsize+=line[i];
             i++;
+
+            if(i > 3){
+                break;
+            }
         }
         image.close();
     }
@@ -52,10 +116,40 @@ int PgmFile::getYSize(){
             ysize*=10;
             ysize+=line[i];
             i++;
+            if(i > 3){
+                break;
+            }
         }
         image.close();
     }
     return ysize;
+}
+
+int PgmFile::getValue(int x, int y){
+    std::string line;
+    std::fstream image;
+    int value =0;
+    image.open(this->file);
+    if(image.is_open()){
+        int i = 0;
+        int maxx = this->getXSize();
+        for(i=0; i<=3; i++){std::getline(image, line);}
+        for(i=0; i<=x+ maxx*(y); i++){
+            std::getline(image, line);
+        }
+        i=0;
+
+        while(line[i] != '\n'){
+            value*=10;
+            value+=line[i];
+            i++;
+            if(i>3){
+                break;
+            }
+        }
+        image.close();
+    }
+    return value;
 }
 
 TimacFile::TimacFile(std::string) : PgmFile(file){
@@ -91,4 +185,27 @@ void TimacFile::buildFile(){
         this->fov);
 
     fclose(timac);
+}
+
+QTree* PgmFile::generateQTreeImage(){
+    
+    
+    int width = this->getXSize();
+    int height = this->getYSize();
+
+    QTree* qtree = new QTree(QTCornersMake(0, 0, width, height));
+
+    for(int i = 0; i < width; i++){
+
+        for (int j = 0; j < height; j++)
+        {   
+            QTNode* qnode = new QTNode(QTNodePosMake(i, j), 255);
+
+            qtree->insert(qnode);
+        }
+        
+
+    }
+
+    return qtree;
 }
