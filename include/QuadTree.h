@@ -28,6 +28,7 @@ public:
     QTNode();
     QTNode(QTNodePos pos, float height);
     ~QTNode();
+    void display();
 };
 
 class QTree {

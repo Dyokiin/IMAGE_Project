@@ -10,13 +10,8 @@ public:
     int xsize;
     int ysize;
     PgmFile(std::string file);
-    int getXSize();
-    int getYSize();
     void builPgm(int mode);
-    int getValue(int x, int y);
     QTree* parse();
-    QTree* generateQTreeImage();
-
 };
 
 class TimacFile : public PgmFile {
@@ -29,7 +24,7 @@ protected:
     float zfar;
     int fov;
 public:
-    TimacFile(std::string file);
+    TimacFile(std::string file, int maxx, int maxy);
     void buildFile();
     
 };

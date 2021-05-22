@@ -9,9 +9,10 @@
 #include "../include/userI.h"
 #include "../include/menus.h"
 #include "../include/ImgGen.h"
+#include "../include/camera.h"
 
 static float aspectRatio;
-static const float GL_VIEW_SIZE = 16.;
+static float GL_VIEW_SIZE = 32.;
 
 void onWindowResized(unsigned int width, unsigned int height)
 { 
@@ -36,12 +37,12 @@ void onWindowResized(unsigned int width, unsigned int height)
 
 int main(int argc, char* argv[]){
 
-    int currentMenu;
+    //int currentMenu;
 
-    SDL_Rect rect;
-    rect.x = 64;
-    rect.y = 104;
-    rect.h = rect.w = 512;
+    // SDL_Rect rect;
+    // rect.x = 64;
+    // rect.y = 104;
+    // rect.h = rect.w = 512;
 
     SDL_Event event;
     bool quit = false;
@@ -66,42 +67,26 @@ int main(int argc, char* argv[]){
 
     
     char *p = SDL_GetBasePath();
-    std::string pgmpath = std::string(p) + "../ressources/height_map2.pgm";
+    std::string pgmpath = std::string(p) + "../ressources/height_map.pgm";
     PgmFile* pgm = new PgmFile(pgmpath);
     free(p);
 
-    int hi;
-
     QTree* qtree = pgm->parse();
-    std::cout << qtree->get_area().x1 << ", " << qtree->get_area().y1 << " : " << qtree->get_area().x2 << ", " << qtree->get_area().y2 << std::endl;
-    for(int i = 0; i< 4; i++){
-
-        for(int j = 0; j < 4; j++){
-
-            if(qtree->search(QTNodePosMake(j, i)) != NULL){
-                hi = qtree->search(QTNodePosMake(j, i))->height;
-                if(hi<10){std::cout << "  " << hi << " ";}
-                else if(hi<100){std::cout << " " << hi << " ";}
-                else {std::cout << hi << " ";}
-            } else {
-                std::cout << "error" << " ";
-            }
-        }
-
-        std::cout << std::endl;
-    }
-
 
     onWindowResized(1280, 720);
 
     if(mainWin){
 
-        currentMenu = 0;
-        Ui* currentUi = new Ui();
+        //currentMenu = 0;
+        //Ui* currentUi = new Ui();
 
-        currentUi = mainMenu();
+        //currentUi = mainMenu();
+
+        Camera *view = new Camera();
 
         while(!quit){
+
+            Uint32 startTime = SDL_GetTicks();
 
             SDL_WaitEvent(&event);
 
@@ -110,6 +95,55 @@ int main(int argc, char* argv[]){
                 case SDL_QUIT:
                     quit = true;
                     break;
+
+                case SDL_WINDOWEVENT:
+                    if(event.window.event == SDL_WINDOWEVENT_RESIZED){
+                        onWindowResized(event.window.data1, event.window.data2);
+                    }
+
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym){
+                        case SDLK_z :
+                            std::cout << "z" << std::endl;
+                            view->UpdateCamera(1,0,0,0,0);
+                        break;
+
+                        case SDLK_s :
+                            view->UpdateCamera(-1,0,0,0,0);
+                        break;
+
+                        case SDLK_q :
+                            view->UpdateCamera(0,1,0,0,0);
+                        break;
+
+                        case SDLK_d :
+                            view->UpdateCamera(0,-1,0,0,0);
+                        break;
+
+                        case SDLK_SPACE :
+                            view->UpdateCamera(0,0,1,0,0);
+                        break;
+
+                        case SDLK_LCTRL :
+                            view->UpdateCamera(0,0,-1,0,0);
+                        break;
+
+                        case SDLK_UP :
+                            view->UpdateCamera(0,0,0,1,0);
+                        break;
+
+                        case SDLK_DOWN :
+                            view->UpdateCamera(0,0,0,-1,0);
+                        break;
+
+                        case SDLK_LEFT :
+                            view->UpdateCamera(0,0,0,0,1);
+                        break;
+
+                        case SDLK_RIGHT :
+                            view->UpdateCamera(0,0,0,0,-1);
+                        break;
+                    }
             
                 // case SDL_MOUSEBUTTONDOWN:
                 //     switch (currentUi->on_click())
@@ -133,41 +167,37 @@ int main(int argc, char* argv[]){
                 //     break;
             }
 
+            glBegin(GL_TRIANGLES);
+
             glClearColor(0,0,0,0);
-            glClear(GL_COLOR_BUFFER_BIT);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(atan(tan(50.0 * 3.14159 / 360.0) / 1.0) * 360.0 / 3.141593, 1.0, 3.0, 7.0);
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
+            gluLookAt(0.0, 0.0, 5.0,
+                      0.0, 0.0, 0.0,
+                      0.0, 1.0, 0.0);
 
-            glPointSize(7);
+            //view->useCamera();
 
-            // glBegin(GL_LINES);
-		    //     glColor3f(1.,0.,0.);
-		    //     glVertex3f(0.,0.,0.);
-		    //     glVertex3f(1,0.,0.);
-		    //     glColor3f(0.,1.,0.);
-		    //     glVertex3i(0.,0.,0.);
-		    //     glVertex3i(0.,1,0.);
-		    //     glColor3f(0.,0.,1.);
-		    //     glVertex3i(0.,0.,0.);
-		    //     glVertex3i(0.,0.,1);
-	        // glEnd();
 
-            glBegin(GL_LINE_STRIP);
-
-                glColor3f(1,1,1);
+            glColor3f(1,1,1);
             
-                qtree->display();
+            qtree->display();
 
 
             //currentUi->DrawUi(renderer);
-
-            glEnd();
-
-            glViewport(0,0,1280,720);
+            glPopMatrix();
 
             SDL_GL_SwapWindow(mainWin);
 
-            SDL_Delay(30);
+            glEnd();
+
+            Uint32 elaspedTime = SDL_GetTicks() - startTime;
+            if(elaspedTime < 1000/60){SDL_Delay(1000/60 - elaspedTime);}
         }
 
         SDL_DestroyWindow(mainWin);

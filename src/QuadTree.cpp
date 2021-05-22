@@ -36,6 +36,12 @@ QTNode::QTNode(QTNodePos pos, float height){
 
 QTNode::~QTNode(){}
 
+void QTNode::display(){
+        float height = this->height;
+        glColor3f(height/255, height/255, height/255);
+        glVertex3f(this->pos.x, -this->pos.y, 0);
+}
+
 QTree::QTree(){
     this->area = QTCornersMake(0,0,0,0);
     this->qtnode = NULL;
@@ -152,23 +158,62 @@ bool QTree::contain(QTNodePos pos){
 
 void QTree::display(){
 
-    if(this->qtnode != NULL){
-        float height = this->qtnode->height;
-        glColor3f(height/255, height/255, height/255);
-        glVertex3f(this->qtnode->pos.x-8, -this->qtnode->pos.y+8, 0);
-    }
 
-    if(this->nW != NULL){
-        this->nW->display();
-    }
-    if (this->nE !=NULL){
-        this->nE->display();
-    }
-    if(this->sE != NULL){
-        this->sE->display();
-    }
-    if(this->sW != NULL){
-        this->sW->display();
+    // if(this->nW != NULL){
+    //     this->nW->display();
+    // }
+    // if (this->nE !=NULL){
+    //     this->nE->display();
+    // }
+    // if(this->sE != NULL){
+    //     this->sE->display();
+    // }
+    // if(this->sW != NULL){
+    //     this->sW->display();
+    // }
+    // if(this->nW != NULL){
+    //     this->nW->display();
+    // }
+    // if(this->sE != NULL){
+    //     this->sE->display();
+    // }
+
+    for(int x=1; x<=this->get_area().x2; x+=2){
+        for(int y=1; y<=this->get_area().y2; y+=2){
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x-1,y-1))->display();
+            this->search(QTNodePosMake(x,y-1))->display();
+            
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x,y-1))->display();
+            this->search(QTNodePosMake(x+1,y-1))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x+1,y-1))->display();
+            this->search(QTNodePosMake(x+1,y))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x+1,y))->display();
+            this->search(QTNodePosMake(x+1,y+1))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x+1,y+1))->display();
+            this->search(QTNodePosMake(x,y+1))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x,y+1))->display();
+            this->search(QTNodePosMake(x-1,y+1))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x-1,y+1))->display();
+            this->search(QTNodePosMake(x-1,y))->display();
+
+            this->search(QTNodePosMake(x,y))->display();
+            this->search(QTNodePosMake(x-1,y))->display();
+            this->search(QTNodePosMake(x-1,y-1))->display();
+            
+        }
     }
     
 }
