@@ -2,8 +2,9 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include "../include/userI.h"
+#include "../include/AffTxt.h"
 
-#define BASESIZEFONT 40
+#define BASESIZEFONT 1
 
 Label::Label(std::string label, int x, int y){
     this->label = label;
@@ -31,33 +32,7 @@ void Label::set_label(std::string new_label){
 }
 
 void Label::DrawLabel(SDL_Renderer *renderer){
-
-    char *p = SDL_GetBasePath();
-    std::string ttfpath = std::string(p) + "unispace rg.ttf";
-    SDL_free(p);
-    Uint8 r = 0;
-    Uint8 g = 0;
-    Uint8 b = 0;
-    Uint8 a = 0;
-    SDL_GetRenderDrawColor(renderer,&r,&g,&b,&a);
-
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont(ttfpath.c_str(), this->size);
-    SDL_Color color = {r,g,b,a};
-    SDL_Surface *surface = TTF_RenderText_Blended(font, this->label.c_str(), color);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-    int textW = 5;
-    int textH = 5;
-
-    SDL_QueryTexture(texture, NULL, NULL, &textW, &textH);
-    SDL_Rect lrect = {this->posx,this->posy,textW,textH};
-    SDL_RenderCopy(renderer, texture, NULL, &lrect);
-
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-    TTF_CloseFont(font);
-    TTF_Quit();
+    AffTxt(this->label, this->size, this->posx, this->posy, renderer);
 }
 
 std::string Label::get_label(){
