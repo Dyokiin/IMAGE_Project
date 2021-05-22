@@ -70,6 +70,10 @@ QTree* PgmFile::parse(){
         }
 
         image.close();
+
+        TimacFile* tim = new TimacFile(this->file, this->xsize, this->ysize);
+        tim->buildFile();
+
         return qtree;
     } else {
         return NULL;
@@ -77,85 +81,9 @@ QTree* PgmFile::parse(){
     
 }
 
-int PgmFile::getXSize(){
-    std::string line;
-    int xsize = 0;
-    std::fstream image;
-    image.open(this->file);
-    if(image.is_open()){
-        int i;
-        for(i=0;i<3;i++){std::getline(image, line);}
-        i=0;
-        while(line[i] != ' '){
-            xsize*=10;
-            xsize+=line[i];
-            i++;
-
-            if(i > 3){
-                break;
-            }
-        }
-        image.close();
-    }
-    return xsize;
-}
-
-int PgmFile::getYSize(){
-    std::string line;
-    std::fstream image;
-    int ysize = 0;
-    image.open(this->file);
-    if(image.is_open()){        
-        int i;
-        for(i=0;i<3;i++){std::getline(image, line);}
-        i=0;
-        while(line[i] != ' '){
-            i++;
-        }
-        i++;
-        while(line[i] != ' '){
-            ysize*=10;
-            ysize+=line[i];
-            i++;
-            if(i > 3){
-                break;
-            }
-        }
-        image.close();
-    }
-    return ysize;
-}
-
-int PgmFile::getValue(int x, int y){
-    std::string line;
-    std::fstream image;
-    int value =0;
-    image.open(this->file);
-    if(image.is_open()){
-        int i = 0;
-        int maxx = this->getXSize();
-        for(i=0; i<=3; i++){std::getline(image, line);}
-        for(i=0; i<=x+ maxx*(y); i++){
-            std::getline(image, line);
-        }
-        i=0;
-
-        while(line[i] != '\n'){
-            value*=10;
-            value+=line[i];
-            i++;
-            if(i>3){
-                break;
-            }
-        }
-        image.close();
-    }
-    return value;
-}
-
-TimacFile::TimacFile(std::string) : PgmFile(file){
-    this->xsize = this->getXSize();
-    this->ysize = this->getYSize();
+TimacFile::TimacFile(std::string, int maxx, int maxy) : PgmFile(file){
+    this->xsize = maxx;
+    this->ysize = maxy;
     this->zmin = DEFAULTZMIN;
     this->zmax = DEFAULTZMAX;
     this->fov = DEFAULTFOV;
@@ -186,27 +114,4 @@ void TimacFile::buildFile(){
         this->fov);
 
     fclose(timac);
-}
-
-QTree* PgmFile::generateQTreeImage(){
-    
-    
-    int width = this->getXSize();
-    int height = this->getYSize();
-
-    QTree* qtree = new QTree(QTCornersMake(0, 0, width, height));
-
-    for(int i = 1; i <= width; i++){
-
-        for (int j = 1; j <= height; j++)
-        {   
-            QTNode* qnode = new QTNode(QTNodePosMake(i, j), 255);
-
-            qtree->insert(qnode);
-        }
-        
-
-    }
-
-    return qtree;
 }
