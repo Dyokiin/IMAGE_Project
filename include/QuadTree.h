@@ -45,6 +45,8 @@ public:
     int insert(QTNode *node);
     QTNode* search(QTNodePos pos);
     bool contain(QTNodePos pos);
+    void display();
+    QTCorners get_area();
 };
 
 #endif

@@ -23,8 +23,8 @@ Ui* menuSwitch(int targetMenu){
 }
 
 Ui* mainMenu(){
-    std::string Title = "IMAGE Project";
-    Label *MainTitle = new Label(Title, 383, 200, 60);
+    std::string Title = "image project";
+    Label *MainTitle = new Label(Title, 383, 200, 2);
 
     std::string Name1 = "Theo Arnauld Des Lions";
     std::string Name2 = "Clement Bourhis";
@@ -33,11 +33,11 @@ Ui* mainMenu(){
     Label *LName2 = new Label(Name2, 1280-15*12, 660, 20);
     Label *LName3 = new Label(Name3, 1280-14*12, 690, 20);
 
-    std::string quit = "Quit";
+    std::string quit = "quit";
     Button *QuitButton = new Button(quit, 597, 460);
     QuitButton->set_signal(0);
 
-    std::string start = "Start";
+    std::string start = "qtart";
     Button *StartButton = new Button(start, 583, 400);
     StartButton->set_signal(1);
 

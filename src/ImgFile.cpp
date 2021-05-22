@@ -33,19 +33,15 @@ QTree* PgmFile::parse(){
         for(i=0;i<3;i++){std::getline(image, line);}
         int j=0;
         while(line[j] != ' '){
-            std::cout << line[j] << std::endl;
             this->xsize*=10;
             this->xsize+=(int)line[j]-48;
             j++;
-            std::cout << xsize << std::endl;
         }
         std::cout << " " << std::endl;
         j++;
         while(line[j] != 0){
-            std::cout << line[j] << std::endl;
             this->ysize*=10;
             this->ysize+=(int)line[j]-48;
-            std::cout << ysize << std::endl;
             j++;
         }
         std::getline(image, line);
@@ -54,9 +50,9 @@ QTree* PgmFile::parse(){
         QTree *qtree = new QTree(QTCornersMake(0, 0, this->xsize, this->ysize));
         int x, y;
 
-        for(x = 0; x<=this->xsize; x++){
+        for(x = 0; x<=this->xsize-1; x++){
 
-            for(y = 0; y<=this->ysize; y++){
+            for(y = 0; y<=this->ysize-1; y++){
                 value = 0;
                 l=0;
 
@@ -65,7 +61,7 @@ QTree* PgmFile::parse(){
                     value+=(int)line[l]-48;
                     l++;
                 }
-                QTNode* qnode = new QTNode(QTNodePosMake(x, y), value);
+                QTNode* qnode = new QTNode(QTNodePosMake(y, x), value);
 
                 qtree->insert(qnode);
                 std::getline(image, line);
@@ -200,9 +196,9 @@ QTree* PgmFile::generateQTreeImage(){
 
     QTree* qtree = new QTree(QTCornersMake(0, 0, width, height));
 
-    for(int i = 0; i < width; i++){
+    for(int i = 1; i <= width; i++){
 
-        for (int j = 0; j < height; j++)
+        for (int j = 1; j <= height; j++)
         {   
             QTNode* qnode = new QTNode(QTNodePosMake(i, j), 255);
 

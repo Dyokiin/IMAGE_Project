@@ -1,4 +1,8 @@
 #include <iostream>
+#include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
+
 #include "../include/QuadTree.h"
 
 
@@ -60,6 +64,10 @@ QTree::~QTree(){
     delete this;
 }
 
+QTCorners QTree::get_area(){
+    return this->area;
+}
+
 int QTree::insert(QTNode *node){
 
     if(node == NULL){return 1;}
@@ -67,14 +75,12 @@ int QTree::insert(QTNode *node){
     if(!(this->contain(node->pos))){return 2;}
 
     if((abs(this->area.x1 - this->area.x2) <= 1) && (abs(this->area.y1 - this->area.y2) <= 1)){
-        if(this->qtnode == NULL){
-            this->qtnode = node;
-        }
+        this->qtnode = node;
         return 0;
     }
 
-    if((this->area.x1 + this->area.x2) / 2 >= node->pos.x){
-        if((this->area.y1 + this->area.y2) / 2 >= node->pos.y){
+    if((this->area.x1 + this->area.x2) / 2 > node->pos.x){
+        if((this->area.y1 + this->area.y2) / 2 > node->pos.y){
             if(this->nW == NULL){
                 this->nW = new QTree(QTCornersMake(this->area.x1,
                                                     this->area.y1,
@@ -92,7 +98,7 @@ int QTree::insert(QTNode *node){
             this->sW->insert(node);
         }
     } else {
-        if((this->area.y1 + this->area.y2) / 2 >= node->pos.y){
+        if((this->area.y1 + this->area.y2) / 2 > node->pos.y){
             if(this->nE == NULL){
                 this->nE = new QTree(QTCornersMake((this->area.x1 + this->area.x2)/ 2,
                                                     this->area.y1,
@@ -118,8 +124,8 @@ QTNode* QTree::search(QTNodePos pos){
     if(!this->contain(pos)){return NULL;}
     if(this->qtnode != NULL){return this->qtnode;}
 
-    if((this->area.x1 + this->area.x2) / 2 >= pos.x){
-        if((this->area.y1 + this->area.y2) / 2 >= pos.y){
+    if((this->area.x1 + this->area.x2) / 2 > pos.x){
+        if((this->area.y1 + this->area.y2) / 2 > pos.y){
             if(this->nW == NULL){return NULL;}
             return this->nW->search(pos);
         }
@@ -129,7 +135,7 @@ QTNode* QTree::search(QTNodePos pos){
         }
     }
     else {
-        if((this->area.y1 + this->area.y2) / 2 >= pos.y){
+        if((this->area.y1 + this->area.y2) / 2 > pos.y){
             if(this->nE == NULL){return NULL;}
             return this->nE->search(pos);
         }
@@ -142,4 +148,27 @@ QTNode* QTree::search(QTNodePos pos){
 
 bool QTree::contain(QTNodePos pos){
     return(pos.x >= this->area.x1 && pos.x <= this->area.x2 && pos.y >= this->area.y1 && pos.y <= this->area.y2);
+}
+
+void QTree::display(){
+
+    if(this->qtnode != NULL){
+        float height = this->qtnode->height;
+        glColor3f(height/255, height/255, height/255);
+        glVertex3f(this->qtnode->pos.x-8, -this->qtnode->pos.y+8, 0);
+    }
+
+    if(this->nW != NULL){
+        this->nW->display();
+    }
+    if (this->nE !=NULL){
+        this->nE->display();
+    }
+    if(this->sE != NULL){
+        this->sE->display();
+    }
+    if(this->sW != NULL){
+        this->sW->display();
+    }
+    
 }

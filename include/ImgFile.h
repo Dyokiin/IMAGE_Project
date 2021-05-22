@@ -1,7 +1,6 @@
 #ifndef IMGFILE_H
 #define IMGFILE_H
 
-#include <string>
 class QTree;
 
 class PgmFile{
