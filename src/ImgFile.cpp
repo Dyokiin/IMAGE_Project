@@ -37,7 +37,6 @@ QTree* PgmFile::parse(){
             this->xsize+=(int)line[j]-48;
             j++;
         }
-        std::cout << " " << std::endl;
         j++;
         while(line[j] != 0){
             this->ysize*=10;
@@ -47,12 +46,12 @@ QTree* PgmFile::parse(){
         std::getline(image, line);
         std::getline(image, line);
         int value, l;
-        QTree *qtree = new QTree(QTCornersMake(0, 0, this->xsize, this->ysize));
+        QTree *qtree = new QTree(QTCornersMake(1, 1, this->xsize+1, this->ysize+1));
         int x, y;
 
-        for(x = 0; x<=this->xsize-1; x++){
+        for(x = 1; x<=this->xsize; x++){
 
-            for(y = 0; y<=this->ysize-1; y++){
+            for(y = 1; y<=this->ysize; y++){
                 value = 0;
                 l=0;
 

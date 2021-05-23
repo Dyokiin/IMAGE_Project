@@ -1,7 +1,7 @@
 BIN = bin/image
 FLAGS = -Wall -g
 INC = 
-LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0 -lSDL2_ttf
+LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0
 LIBDIR = 
 GCC = g++
 OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/userI.o obj/imageMain.o obj/menus.o obj/ImgGen.o obj/AffTxt.o obj/camera.o
