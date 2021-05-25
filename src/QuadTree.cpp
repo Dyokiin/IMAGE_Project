@@ -58,7 +58,7 @@ QTree::QTree(){
 
 QTree::QTree(QTCorners corners){
     this->area = corners;
-    this->qtnode = NULL;    
+    this->qtnode = NULL;  
     this->nW = NULL;
     this->nE = NULL;
     this->sE = NULL;

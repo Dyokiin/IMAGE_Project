@@ -6,13 +6,13 @@
 
 #include "../include/QuadTree.h"
 #include "../include/ImgFile.h"
-#include "../include/userI.h"
-#include "../include/menus.h"
 #include "../include/ImgGen.h"
 #include "../include/camera.h"
+#include "../include/glbiri.h"
 
 static float aspectRatio;
-static float GL_VIEW_SIZE = 900.;
+static float GL_VIEW_SIZE = 8.;
+
 
 void onWindowResized(unsigned int width, unsigned int height)
 { 
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
 
     
     char *p = SDL_GetBasePath();
-    std::string pgmpath = std::string(p) + "../ressources/height_map1.pgm";
+    std::string pgmpath = std::string(p) + "../ressources/height_map2.pgm";
     PgmFile* pgm = new PgmFile(pgmpath);
     free(p);
 
@@ -75,12 +75,9 @@ int main(int argc, char* argv[]){
 
     onWindowResized(1280, 720);
 
+    int mode = GL_LINES;
+
     if(mainWin){
-
-        //currentMenu = 0;
-        //Ui* currentUi = new Ui();
-
-        //currentUi = mainMenu();
 
         Camera *view = new Camera();
 
@@ -88,109 +85,81 @@ int main(int argc, char* argv[]){
 
             Uint32 startTime = SDL_GetTicks();
 
-            SDL_WaitEvent(&event);
 
-            switch (event.type)
-            {
-                case SDL_QUIT:
-                    quit = true;
-                    break;
+            while(SDL_PollEvent(&event)){
 
-                case SDL_WINDOWEVENT:
-                    if(event.window.event == SDL_WINDOWEVENT_RESIZED){
-                        onWindowResized(event.window.data1, event.window.data2);
-                    }
-
-                case SDL_KEYDOWN:
-                    switch(event.key.keysym.sym){
-                        case SDLK_z :
-                            std::cout << "z" << std::endl;
-                            view->UpdateCamera(1,0,0,0,0);
+                switch (event.type)
+                {
+                    case SDL_QUIT:
+                        quit = true;
                         break;
 
-                        case SDLK_s :
-                            view->UpdateCamera(-1,0,0,0,0);
-                        break;
+                    case SDL_WINDOWEVENT:
+                        if(event.window.event == SDL_WINDOWEVENT_RESIZED){
+                            onWindowResized(event.window.data1, event.window.data2);
+                        }
 
-                        case SDLK_q :
-                            view->UpdateCamera(0,1,0,0,0);
-                        break;
+                    case SDL_KEYDOWN:
+                        switch(event.key.keysym.sym){
+                            case SDLK_z :
+                                std::cout << "z" << std::endl;
+                                view->UpdateCamera(1,0,0,0,0);
+                            break;
 
-                        case SDLK_d :
-                            view->UpdateCamera(0,-1,0,0,0);
-                        break;
+                            case SDLK_s :
+                                view->UpdateCamera(-1,0,0,0,0);
+                            break;
 
-                        case SDLK_SPACE :
-                            view->UpdateCamera(0,0,1,0,0);
-                        break;
+                            case SDLK_q :
+                                view->UpdateCamera(0,1,0,0,0);
+                            break;
 
-                        case SDLK_LCTRL :
-                            view->UpdateCamera(0,0,-1,0,0);
-                        break;
+                            case SDLK_d :
+                                view->UpdateCamera(0,-1,0,0,0);
+                            break;
 
-                        case SDLK_UP :
-                            view->UpdateCamera(0,0,0,1,0);
-                        break;
+                            case SDLK_SPACE :
+                                view->UpdateCamera(0,0,1,0,0);
+                            break;
 
-                        case SDLK_DOWN :
-                            view->UpdateCamera(0,0,0,-1,0);
-                        break;
+                            case SDLK_LCTRL :
+                                view->UpdateCamera(0,0,-1,0,0);
+                            break;
 
-                        case SDLK_LEFT :
-                            view->UpdateCamera(0,0,0,0,1);
-                        break;
+                            case SDLK_UP :
+                                view->UpdateCamera(0,0,0,1,0);
+                            break;
 
-                        case SDLK_RIGHT :
-                            view->UpdateCamera(0,0,0,0,-1);
+                            case SDLK_DOWN :
+                                view->UpdateCamera(0,0,0,-1,0);
+                            break;
+
+                            case SDLK_LEFT :
+                                view->UpdateCamera(0,0,0,0,1);
+                            break;
+
+                            case SDLK_RIGHT :
+                                view->UpdateCamera(0,0,0,0,-1);
+                            break;
+
+                            // case SDLK_SPACE :
+                            //     if(mode == GL_LINES){
+                            //         mode = GL_TRIANGLES;
+                            //     } else {
+                            //         mode = GL_LINES;
+                            //     }
+
+                        }
                         break;
-                    }
-            
-                // case SDL_MOUSEBUTTONDOWN:
-                //     switch (currentUi->on_click())
-                //     {
-                //         case 0:
-                //             if(currentMenu == 0){quit = true;}
-                //             else {
-                //                 currentMenu--;
-                //                 currentUi = menuSwitch(currentMenu);
-                //             }
-                //             break;
-                //         case 1:
-                //             currentMenu++;
-                //             currentUi = menuSwitch(currentMenu);
-                //             break;
-                        
-                //         default:
-                //             //currentUi->on_click();
-                //             break;
-                //     }
-                //     break;
+                }
             }
 
-            glBegin(GL_TRIANGLES);
+            init();
+            reshapeFunc(1280, 720);
 
-            glClearColor(0,0,0,0);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            drawFunc(qtree);
 
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            gluPerspective(atan(tan(50.0 * 3.14159 / 360.0) / 1.0) * 360.0 / 3.141593, 1.0, 3.0, 7.0);
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-            gluLookAt(0.0, 0.0, 100.0,
-                      0.0, 0.0, 0.0,
-                      0.0, 1.0, 0.0);
-
-            //view->useCamera();
-
-
-            glColor3f(1,1,1);
-            
-            qtree->display();
-
-
-            //currentUi->DrawUi(renderer);
-            glPopMatrix();
+            view->useCamera();
 
             SDL_GL_SwapWindow(mainWin);
 
