@@ -15,9 +15,11 @@ private:
     float cz;
 
     //camera look at
-    float anglespeed;
-    float phi;
-    float teta;
+    float STEP_ANGLE;
+
+    float profondeur;
+    float longitude;
+    float latitude;
 
     float vx;
     float vy;

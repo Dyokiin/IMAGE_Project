@@ -12,7 +12,8 @@
 #include "../include/camera.h"
 
 static float aspectRatio;
-static float GL_VIEW_SIZE = 900.;
+static float GL_VIEW_SIZE = 8.;
+
 
 void onWindowResized(unsigned int width, unsigned int height)
 { 
@@ -67,7 +68,7 @@ int main(int argc, char* argv[]){
 
     
     char *p = SDL_GetBasePath();
-    std::string pgmpath = std::string(p) + "../ressources/height_map1.pgm";
+    std::string pgmpath = std::string(p) + "../ressources/height_map2.pgm";
     PgmFile* pgm = new PgmFile(pgmpath);
     free(p);
 
@@ -75,12 +76,11 @@ int main(int argc, char* argv[]){
 
     onWindowResized(1280, 720);
 
+    int mode = GL_LINES;
+
     if(mainWin){
 
-        //currentMenu = 0;
-        //Ui* currentUi = new Ui();
 
-        //currentUi = mainMenu();
 
         Camera *view = new Camera();
 
@@ -88,7 +88,8 @@ int main(int argc, char* argv[]){
 
             Uint32 startTime = SDL_GetTicks();
 
-            SDL_WaitEvent(&event);
+
+            SDL_PollEvent(&event);
 
             switch (event.type)
             {
@@ -143,6 +144,14 @@ int main(int argc, char* argv[]){
                         case SDLK_RIGHT :
                             view->UpdateCamera(0,0,0,0,-1);
                         break;
+
+                        // case SDLK_SPACE :
+                        //     if(mode == GL_LINES){
+                        //         mode = GL_TRIANGLES;
+                        //     } else {
+                        //         mode = GL_LINES;
+                        //     }
+
                     }
             
                 // case SDL_MOUSEBUTTONDOWN:
@@ -167,30 +176,34 @@ int main(int argc, char* argv[]){
                 //     break;
             }
 
-            glBegin(GL_TRIANGLES);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glFrustum(-1, 1, -1, 1, 1, 20);
+
+            glBegin(mode);
 
             glClearColor(0,0,0,0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            gluPerspective(atan(tan(50.0 * 3.14159 / 360.0) / 1.0) * 360.0 / 3.141593, 1.0, 3.0, 7.0);
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-            gluLookAt(0.0, 0.0, 100.0,
-                      0.0, 0.0, 0.0,
-                      0.0, 1.0, 0.0);
 
-            //view->useCamera();
+            view->useCamera();
 
 
-            glColor3f(1,1,1);
+            glColor3f(1.,0.,0.);
+            glVertex3f(0.,0.,0.);
+            glVertex3f(2,0.,0.);
+            glColor3f(0.,1.,0.);
+            glVertex3i(0.,0.,0.);
+            glVertex3i(0.,2,0.);
+            glColor3f(0.,0.,1.);
+            glVertex3i(0.,0.,0.);
+            glVertex3i(0.,0.,2);
+
             
             qtree->display();
 
-
-            //currentUi->DrawUi(renderer);
-            glPopMatrix();
 
             SDL_GL_SwapWindow(mainWin);
 
