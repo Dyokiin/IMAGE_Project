@@ -45,9 +45,9 @@ QTree* PgmFile::parse(){
         }
         std::getline(image, line);
         std::getline(image, line);
-        int value, l;
+        float value;
         QTree *qtree = new QTree(QTCornersMake(0, 0, this->xsize, this->ysize));
-        int x, y;
+        int x, y, l;
 
         for(x = 0; x<this->xsize; x++){
 
@@ -75,12 +75,13 @@ QTree* PgmFile::parse(){
 
         return qtree;
     } else {
+        std::cout << "AZY LA" << std::endl;
         return NULL;
     }
     
 }
 
-TimacFile::TimacFile(std::string, int maxx, int maxy) : PgmFile(file){
+TimacFile::TimacFile(std::string file, int maxx, int maxy) : PgmFile(file){
     this->xsize = maxx;
     this->ysize = maxy;
     this->zmin = DEFAULTZMIN;
@@ -92,7 +93,7 @@ TimacFile::TimacFile(std::string, int maxx, int maxy) : PgmFile(file){
 
 void TimacFile::buildFile(){
     FILE *timac;
-    char name[32];
+    char name[64];
     int x = 0;
 
     for(long unsigned int i=0; i<this->file.length(); i++){
