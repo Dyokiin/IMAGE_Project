@@ -4,7 +4,7 @@ INC =
 LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0
 LIBDIR = 
 GCC = g++
-OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/imageMain.o obj/ImgGen.o obj/camera.o obj/glbiri.o
+OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/ImgGen.o obj/camera.o obj/visu.o obj/gldrawing.o obj/create_object.o
 
 default: $(BIN)
 
@@ -19,16 +19,19 @@ obj/QuadTree.o: src/QuadTree.cpp include/QuadTree.h
 obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
-obj/glbiri.o: src/glbiri.cpp include/glbiri.h
-	$(GCC) $(INC) $(FLAGS) -c $< -o $@
-
 obj/ImgGen.o: src/ImgGen.cpp include/ImgGen.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/camera.o: src/camera.cpp include/camera.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
-obj/imageMain.o: src/imageMain.cpp
+obj/gldrawing.o: src/gldrawing.cpp include/gldrawing.h
+	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
+obj/create_object.o: src/create_object.cpp include/create_object.h
+	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
+obj/visu.o: src/visu.cpp
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 
