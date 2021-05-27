@@ -6,14 +6,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <iostream>
 
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <GL/gl.h>
 
+
 #include "../include/visu.h"
-#include "../include/gldrawing.h"
-#include "../include/create_object.h"
 #include "../include/QuadTree.h"
 
 
@@ -29,6 +29,10 @@ float offy;
 float offz;
 
 
+/* Quadtrees Globaux */
+QTree *qtree;
+
+
 /*********************************************************/
 /* fonction de dessin de la scène à l'écran              */
 static void drawFunc() { 
@@ -42,34 +46,21 @@ static void drawFunc() {
 	/* Debut du dessin de la scène */
 	glPushMatrix();
 
-	x = profondeur*sin(longitude)*sin(latitude);
-	y = profondeur*cos(latitude);
-	z = profondeur*cos(longitude)*sin(latitude);
+	x = 0.1*sin(longitude)*sin(latitude);
+	y = 0.1*cos(latitude);
+	z = 0.1*cos(longitude)*sin(latitude);
 	
 	/* placement de la caméra */
 	gluLookAt(x + offx,y + offy,z + offz,
               0.0 + offx,0.0 + offy,0.0 + offz,
               0.0,1.0,0.0);
 
-	glColor3f(1.0,0.0,0.0);
-	glDrawRepere(2.0);
-
-	// float position[4] = {5.0,5.0,5.0,1.0};
-	// float black[3] = {0.0,0.0,0.0};
-	// float intensite[3] = {1000.0,1000.0,1000.0};
-	// glEnable(GL_LIGHTING);
-	// glEnable(GL_LIGHT0);
-	// glLightfv(GL_LIGHT0,GL_POSITION,position);
-	// glLightfv(GL_LIGHT0,GL_DIFFUSE,intensite);
-	// glLightfv(GL_LIGHT0,GL_SPECULAR,black);
-	//glLightf(GL_LIGHT0,GL_,black);
-	//glLightf(GL_LIGHT0,GL_SPECULAR,black);
 
 	glPushMatrix();
-	glColor3f(1.0,1.0,1.0);
-	glDrawObject();
 
-	// glDisable(GL_LIGHTING);
+	glBegin(GL_TRIANGLES);
+	qtree->display();
+	glEnd();
 
 	/* Fin du dessin */
 	glPopMatrix();
@@ -95,7 +86,7 @@ static void reshapeFunc(int width,int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	/* définition de la camera */
-	gluPerspective( 70.0, h, 0.01, 1000.0 );			// Angle de vue, rapport largeur/hauteur, near, far
+	gluPerspective( 60.0, h, 0.01, 1000.0 );			// Angle de vue, rapport largeur/hauteur, near, far
 
 	/* Retour a la pile de matrice Modelview
 			et effacement de celle-ci */
@@ -121,14 +112,15 @@ static void kbdFunc(unsigned char c, int x, int y) {
 			break;
 		case 'Z' : case 'z' : offx+=0.5;
 			break;
-		case 'Q' : case 'q' : offz+=0.5;
+		case 'Q' : case 'q' : offz-=0.5;
 			break;
 		case 'S' : case 's' : offx-=0.5;
 			break;
-		case 'D' : case 'd' : offz-=0.5;
+		case 'D' : case 'd' : offz+=0.5;
 			break;
-		default:
-			printf("Appui sur la touche %c\n",c);
+		case 32 :
+			offy+=0.5;
+			break;
 	}
 	glutPostRedisplay();
 }
@@ -143,25 +135,20 @@ static void kbdSpFunc(int c, int x, int y) {
 	/* sortie du programme si utilisation des touches ESC, */
 	switch(c) {
 		case GLUT_KEY_UP :
-			if (latitude>STEP_ANGLE) latitude -= STEP_ANGLE;
+			if (latitude>STEP_ANGLE) latitude += STEP_ANGLE;
 			break;
 		case GLUT_KEY_DOWN :
-			if(latitude<M_PI-STEP_ANGLE) latitude += STEP_ANGLE;
+			if(latitude<M_PI-STEP_ANGLE) latitude -= STEP_ANGLE;
 			break;
 		case GLUT_KEY_LEFT :
-			longitude -= STEP_ANGLE;
-			break;
-		case GLUT_KEY_RIGHT :
 			longitude += STEP_ANGLE;
 			break;
-		case GLUT_KEY_PAGE_UP :
-			profondeur += STEP_PROF;
+		case GLUT_KEY_RIGHT :
+			longitude -= STEP_ANGLE;
 			break;
-		case GLUT_KEY_PAGE_DOWN :
-			if (profondeur>0.1+STEP_PROF) profondeur -= STEP_PROF;
+		case 114 :
+			offy-=0.5;
 			break;
-		default:
-			printf("Appui sur une touche spéciale\n");
 	}
 	glutPostRedisplay();
 }
@@ -182,7 +169,7 @@ static void mouseFunc(int button, int state, int x, int y) {
 /* enfoncé.                                              */
 /* paramètres :                                          */
 /* - x,y : coordonnées du curseur dans la fenêtre        */
-static void motionFunc(int x, int y) { 
+static void motionFunc(int x, int y) {
 }
 
 /*********************************************************/
@@ -191,8 +178,8 @@ static void motionFunc(int x, int y) {
 static void init() {
 	
 	profondeur = 10;
-	latitude = M_PI/2.0;
-	longitude = 0.0;
+	latitude = 1.32;
+	longitude = 3.94;
 
 	/* INITIALISATION DES PARAMETRES GL */
 	/* couleur du fond (gris sombre) */
@@ -204,7 +191,13 @@ static void init() {
 	//glShadeModel(GL_SMOOTH);
 
 	/* INITIALISATION DE LA SCENE */
-	createCoordinates();
+	// char *p = SDL_GetBasePath();
+    std::string pgmpath = "./ressources/height_map1.pgm";
+    PgmFile* pgm = new PgmFile(pgmpath);
+    // free(p);
+
+    qtree = pgm->parse();
+
 }
 
 int main(int argc, char** argv) {
@@ -217,7 +210,7 @@ int main(int argc, char** argv) {
 	glutInitDisplayMode(GLUT_RGBA|GLUT_DEPTH|GLUT_DOUBLE);
 	/* placement et dimentions originales de la fenêtre */
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(1280, 720);
 	/* ouverture de la fenêtre */
 	if (glutCreateWindow("IMAGE Project") == GL_FALSE) {
 		return 1;

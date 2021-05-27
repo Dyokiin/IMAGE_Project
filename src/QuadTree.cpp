@@ -43,7 +43,7 @@ void QTNode::display(){
         else if(height <= 80){glColor3f(height/255, height/255,0);}
         else if(height >= 210){glColor3f(height/255, height/255, height/255);}
         else{glColor3f(0, height/255,0);}
-        glVertex3f(this->pos.x, height/10, this->pos.y);
+        glVertex3f(this->pos.x, height/10 -25.5, this->pos.y);
     }
 }
 
