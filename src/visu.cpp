@@ -17,6 +17,7 @@
 #include "../include/visu.h"
 #include "../include/QuadTree.h"
 #include "../include/texture.h"
+#include "../include/frustrum.h"
 
 float profondeur = 3;
 float latitude = 0.0;
@@ -28,9 +29,11 @@ float offx;
 float offy;
 float offz;
 
+
 /* Global Class */
 QTree *qtree;
 Skybox* skybx;
+FrustumG frustrum;
 
 
 /*********************************************************/
@@ -49,11 +52,15 @@ static void drawFunc() {
 	x = 0.1*sin(longitude)*sin(latitude);
 	y = 0.1*cos(latitude);
 	z = 0.1*cos(longitude)*sin(latitude);
+	Vec3 pos(x+offx,y+offy,z+offz);
+	Vec3 lat(0.0 + offx,0.0 + offy,0.0 + offz);
+	Vec3 upv(0.0,1.0,0.0);
 	
 	/* placement de la caméra */
-	gluLookAt(x + offx,y + offy,z + offz,
-              0.0 + offx,0.0 + offy,0.0 + offz,
-              0.0,1.0,0.0);
+	gluLookAt(pos.x,pos.y,pos.z,
+              lat.x,lat.y,lat.z,
+              upv.x,upv.y,upv.z);
+	frustrum.setCamDef(pos,lat,upv);
 
 
 	glPushMatrix();
@@ -64,11 +71,8 @@ static void drawFunc() {
 	qtree->display();
 	glEnd();
 
-
 	/* Fin du dessin */
 	glPopMatrix();
-
-
 
 	/* fin de la définition de la scène */
 	glFinish();
@@ -91,7 +95,8 @@ static void reshapeFunc(int width,int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	/* définition de la camera */
-	gluPerspective( 60.0, h, 0.01, 1000.0 );			// Angle de vue, rapport largeur/hauteur, near, far
+	gluPerspective( 60.0, h, 0.01, 1000.0 );
+	frustrum.setCamInternals(70.0, h, 0.01, 1000.0);			// Angle de vue, rapport largeur/hauteur, near, far
 
 	/* Retour a la pile de matrice Modelview
 			et effacement de celle-ci */
@@ -190,16 +195,11 @@ static void init() {
 	/* couleur du fond (gris sombre) */
 	glClearColor(0.3,0.3,0.3,0.0);
 	/* activation du ZBuffer */
-	glEnable( GL_DEPTH_TEST);
-
-	/* lissage des couleurs sur les facettes */
-	//glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
 
 	/* INITIALISATION DE LA SCENE */
-	// char *p = SDL_GetBasePath();
     std::string pgmpath = "./ressources/height_map1.pgm";
     PgmFile* pgm = new PgmFile(pgmpath);
-    // free(p);
 
     qtree = pgm->parse();
 

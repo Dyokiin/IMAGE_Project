@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 
 #include "../include/QuadTree.h"
-
+#include "../include/frustrum.h"
 
 QTNodePos QTNodePosMake(int x, int y){
 
@@ -164,13 +164,16 @@ bool QTree::contain(QTNodePos pos){
 void QTree::display(){    
     for(int x=this->area.x1; x<=this->area.x2; x++){
         for(int y=this->area.y1; y<=this->area.y2; y++){
-            this->search(QTNodePosMake(x+1,y))->display();
-            this->search(QTNodePosMake(x+1,y+1))->display();
-            this->search(QTNodePosMake(x,y))->display();
+            Vec3 p(x,this->search(QTNodePosMake(x,y))->height/10 -25.5,y);
+            if(frustrum.pointInFrustum(p)==1) {
+                this->search(QTNodePosMake(x+1,y))->display();
+                this->search(QTNodePosMake(x+1,y+1))->display();
+                this->search(QTNodePosMake(x,y))->display();
 
-            this->search(QTNodePosMake(x,y))->display();
-            this->search(QTNodePosMake(x,y+1))->display();
-            this->search(QTNodePosMake(x+1,y+1))->display();
+                this->search(QTNodePosMake(x,y))->display();
+                this->search(QTNodePosMake(x,y+1))->display();
+                this->search(QTNodePosMake(x+1,y+1))->display();
+            }
         }
     }
 }

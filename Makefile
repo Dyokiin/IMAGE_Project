@@ -4,7 +4,7 @@ INC =
 LIBS = -lglut -lGLU -lGL -lm -lSDL -lSDL_image
 LIBDIR = 
 GCC = g++
-OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/camera.o obj/visu.o  obj/texture.o	
+OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/frustrum.o obj/visu.o  obj/texture.o	
 
 default: $(BIN)
 
@@ -19,7 +19,7 @@ obj/QuadTree.o: src/QuadTree.cpp include/QuadTree.h
 obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
-obj/camera.o: src/camera.cpp include/camera.h
+obj/frustrum.o: src/frustrum.cpp include/frustrum.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/texture.o: src/texture.cpp include/texture.h

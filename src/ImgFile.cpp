@@ -14,7 +14,6 @@ std::string ext = ".timac";
 
 PgmFile::PgmFile(std::string file){
     this->file = file;
-
 }
 
 QTree* PgmFile::parse(){
@@ -59,7 +58,7 @@ QTree* PgmFile::parse(){
                     l++;
                 }
                 QTNode* qnode = new QTNode(QTNodePosMake(y, x), value);
-
+                
                 qtree->insert(qnode);
                 std::getline(image, line);
             }
