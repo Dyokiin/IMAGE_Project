@@ -6,9 +6,7 @@
 #include "../include/ImgFile.h"
 
 
-#define DEFAULTFOV  70
-#define DEFAULTNEAR 0
-#define DEFAULTFAR  0
+#define DEFAULTFOV  60
 #define DEFAULTZMIN 0
 #define DEFAULTZMAX 255
 
@@ -75,7 +73,6 @@ QTree* PgmFile::parse(){
 
         return qtree;
     } else {
-        std::cout << "AZY LA" << std::endl;
         return NULL;
     }
     
@@ -87,8 +84,8 @@ TimacFile::TimacFile(std::string file, int maxx, int maxy) : PgmFile(file){
     this->zmin = DEFAULTZMIN;
     this->zmax = DEFAULTZMAX;
     this->fov = DEFAULTFOV;
-    this->znear = DEFAULTNEAR;
-    this->zfar = DEFAULTFAR;
+    this->znear = 0.1;
+    this->zfar = maxx;
 }
 
 void TimacFile::buildFile(){

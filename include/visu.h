@@ -7,12 +7,8 @@
 extern float profondeur;
 extern float latitude;
 extern float longitude;
-
-/* variables globales pour la gestion de l'objet */
-extern float obj_rot;
-
-/* Déclaration des fonctions */
-void idle(void);
-
+extern float offx;
+extern float offy;
+extern float offz;
 
 #endif
