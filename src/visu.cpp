@@ -1,3 +1,5 @@
+/* SUR LA BASE DE : */
+
 /* *******************************************************/
 /* Exemple de programme OpenGL / GLUT           (C) 2010 */
 /* Venceslas Biri   Université Paris Est Marne La Vallée */
@@ -12,12 +14,10 @@
 #include <GL/glu.h>
 #include <GL/gl.h>
 
-
 #include "../include/visu.h"
 #include "../include/QuadTree.h"
+#include "../include/texture.h"
 
-
-/* variables globales pour la gestion de la caméra */
 float profondeur = 3;
 float latitude = 0.0;
 float longitude = M_PI/2.;
@@ -28,9 +28,9 @@ float offx;
 float offy;
 float offz;
 
-
-/* Quadtrees Globaux */
+/* Global Class */
 QTree *qtree;
+Skybox* skybx;
 
 
 /*********************************************************/
@@ -57,13 +57,18 @@ static void drawFunc() {
 
 
 	glPushMatrix();
+	
+	skybx->Display();
 
 	glBegin(GL_TRIANGLES);
 	qtree->display();
 	glEnd();
 
+
 	/* Fin du dessin */
 	glPopMatrix();
+
+
 
 	/* fin de la définition de la scène */
 	glFinish();
@@ -197,6 +202,9 @@ static void init() {
     // free(p);
 
     qtree = pgm->parse();
+
+	skybx = new Skybox();
+	skybx->Bind();
 
 }
 

@@ -1,10 +1,10 @@
 BIN = bin/image
 FLAGS = -Wall -g
 INC = 
-LIBS = -lglut -lGLU -lGL -lm -lSDL2-2.0 -lSDL_image
+LIBS = -lglut -lGLU -lGL -lm -lSDL -lSDL_image
 LIBDIR = 
 GCC = g++
-OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/camera.o obj/visu.o  
+OBJECTS = obj/QuadTree.o obj/ImgFile.o obj/camera.o obj/visu.o  obj/texture.o	
 
 default: $(BIN)
 
@@ -20,6 +20,9 @@ obj/ImgFile.o: src/ImgFile.cpp include/ImgFile.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/camera.o: src/camera.cpp include/camera.h
+	$(GCC) $(INC) $(FLAGS) -c $< -o $@
+
+obj/texture.o: src/texture.cpp include/texture.h
 	$(GCC) $(INC) $(FLAGS) -c $< -o $@
 
 obj/visu.o: src/visu.cpp
