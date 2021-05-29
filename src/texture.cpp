@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../include/texture.h"
 #include "../include/visu.h"
+#include "../include/QuadTree.h"
 
 Skybox::Skybox(){
     front = 0;
@@ -14,6 +15,8 @@ Skybox::Skybox(){
     top = 0;
     bot = 0;
 }
+
+GLuint grass;
 
 //Dessine la Skybox
 void Skybox::Display() {
@@ -172,4 +175,32 @@ Tree::Tree(QTNode *node){
         SDL_FreeSurface(image);
     }
     IMG_Quit();
+}
+
+void loadGrass(){
+    IMG_Init(IMG_INIT_JPG);
+    SDL_Surface* image = IMG_Load("./ressources/index.jpg");
+    if(!image){
+        printf("%s\n", IMG_GetError());
+    }else{
+        glGenTextures(1, &grass);
+        glBindTexture(GL_TEXTURE_2D, grass);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        SDL_FreeSurface(image);
+    }
+    IMG_Quit();
+}
+void drawTriangle(QTNode n1, QTNode n2, QTNode n3){
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, grass);
+    glBegin(GL_TRIANGLES);
+        glTexCoord2f(0.,0.); glVertex3f(n1.pos.x, n1.height, n1.pos.y);
+        glTexCoord2f(1.,0.); glVertex3f(n2.pos.x, n2.height, n2.pos.y);
+        glTexCoord2f(0.5,1.);glVertex3f(n3.pos.x, n3.height, n3.pos.y);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);  
+
 }

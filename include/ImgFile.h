@@ -26,8 +26,7 @@ protected:
     int fov;
 public:
     TimacFile(std::string file, int maxx, int maxy);
-    void buildFile();
-    
+    void buildFile(); 
 };
 
 

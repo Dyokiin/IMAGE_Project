@@ -67,9 +67,10 @@ static void drawFunc() {
 
 	glPushMatrix();
 
-
+	glBegin(GL_TRIANGLES);
 	qtree->display();
 	//qtree->displayDebug();
+	glEnd();
 
 
 	glDepthMask(GL_FALSE);
@@ -213,6 +214,7 @@ static void init() {
 	skybx = new Skybox();
 	skybx->Bind();
 
+	loadGrass();
 }
 
 int main(int argc, char** argv) {
