@@ -22,12 +22,15 @@
 float profondeur = 3;
 float latitude = 0.0;
 float longitude = M_PI/2.;
-float x;
-float y;
-float z;
 float offx;
 float offy;
 float offz;
+float xp ;
+float yp ;
+float z ;
+Vec3 pos;
+Vec3 lat;
+Vec3 upv;
 
 
 /* Global Class */
@@ -49,13 +52,12 @@ static void drawFunc() {
 	/* Debut du dessin de la scène */
 	glPushMatrix();
 
-	x = 0.1*sin(longitude)*sin(latitude);
-	y = 0.1*cos(latitude);
+	xp = 0.1*sin(longitude)*sin(latitude);
+	yp = 0.1*cos(latitude);
 	z = 0.1*cos(longitude)*sin(latitude);
-	Vec3 pos(x+offx,y+offy,z+offz);
+	Vec3 pos(xp+offx,yp+offy,z+offz);
 	Vec3 lat(0.0 + offx,0.0 + offy,0.0 + offz);
 	Vec3 upv(0.0,1.0,0.0);
-	
 	/* placement de la caméra */
 	gluLookAt(pos.x,pos.y,pos.z,
               lat.x,lat.y,lat.z,
@@ -64,12 +66,14 @@ static void drawFunc() {
 
 
 	glPushMatrix();
-	
-	skybx->Display();
 
 	glBegin(GL_TRIANGLES);
 	qtree->display();
 	glEnd();
+
+	glDepthMask(GL_FALSE);
+	skybx->Display();
+	glDepthMask(GL_TRUE);
 
 	/* Fin du dessin */
 	glPopMatrix();
@@ -120,13 +124,15 @@ static void kbdFunc(unsigned char c, int x, int y) {
 			break;
 		case 'P' : case 'p' : glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 			break;
-		case 'Z' : case 'z' : offx+=0.5;
+		case 'Z' : case 'z' : 
+			offx+=5*(-xp);
+			offy+=5*(-yp);
+			offz+=5*(-z);
 			break;
-		case 'Q' : case 'q' : offz-=0.5;
-			break;
-		case 'S' : case 's' : offx-=0.5;
-			break;
-		case 'D' : case 'd' : offz+=0.5;
+		case 'S' : case 's' :
+			offx-=5*(-xp);
+			offy-=5*(-yp);
+			offz-=5*(-z);
 			break;
 		case 32 :
 			offy+=0.5;

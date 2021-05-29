@@ -19,7 +19,7 @@ Skybox::Skybox(){
 void Skybox::Display() {
     glEnable(GL_TEXTURE_2D);
     
-    float l = 500;
+    float l = 450;
     glColor3f(120, 120, 120);
 
     glBindTexture(GL_TEXTURE_2D, front);
