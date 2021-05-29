@@ -67,9 +67,10 @@ static void drawFunc() {
 
 	glPushMatrix();
 
-	glBegin(GL_TRIANGLES);
+
 	qtree->display();
-	glEnd();
+	//qtree->displayDebug();
+
 
 	glDepthMask(GL_FALSE);
 	skybx->Display();
@@ -126,12 +127,12 @@ static void kbdFunc(unsigned char c, int x, int y) {
 			break;
 		case 'Z' : case 'z' : 
 			offx+=5*(-xp);
-			offy+=5*(-yp);
+			//offy+=5*(-yp);
 			offz+=5*(-z);
 			break;
 		case 'S' : case 's' :
 			offx-=5*(-xp);
-			offy-=5*(-yp);
+			//offy-=5*(-yp);
 			offz-=5*(-z);
 			break;
 		case 32 :
