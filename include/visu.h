@@ -3,6 +3,7 @@
 
 #define STEP_ANGLE	M_PI/90.
 #define STEP_PROF	M_PI/90.
+
 /* variables globales pour la gestion de la caméra */
 extern float profondeur;
 extern float latitude;

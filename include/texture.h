@@ -1,3 +1,7 @@
+#ifndef TEXTURE_H
+#define TEXTURE_H
+
+
 #include <string>
 #include <GL/glut.h>
 #include <GL/glu.h>
@@ -33,3 +37,6 @@ public :
     void Display();
     void Bind();
 };
+
+
+#endif
