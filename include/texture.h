@@ -12,12 +12,11 @@
 
 class Tree {
 private :
-    std::string name;
     GLuint texture;
     QTNodePos pos;
 public :
     Tree();
-    Tree(std::string name);
+    Tree(QTNode* Node);
     QTNodePos Get_pos();
     QTNodePos Set_pos(QTNodePos pos);
     void Display();

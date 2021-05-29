@@ -24,6 +24,7 @@ class QTNode {
 public:  
     QTNodePos pos;
     float height;
+    GLuint* tree;
 public:
     QTNode();
     QTNode(QTNodePos pos, float height);

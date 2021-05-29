@@ -155,3 +155,21 @@ void Skybox::Bind(){
     IMG_Quit();
    
 }
+
+Tree::Tree(){}
+
+Tree::Tree(QTNode *node){
+    IMG_Init(IMG_INIT_PNG);
+    SDL_Surface* image = IMG_Load("./ressources/TREE.png");
+    if(!image){
+        printf("%s\n", IMG_GetError());
+    }else{
+        glGenTextures(1, node->tree);
+        glBindTexture(GL_TEXTURE_2D, *node->tree);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->w, image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        SDL_FreeSurface(image);
+    }
+    IMG_Quit();
+}
