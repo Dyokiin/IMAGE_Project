@@ -29,6 +29,7 @@ public:
     QTNode(QTNodePos pos, float height);
     ~QTNode();
     void display();
+    void displayD();
 };
 
 class QTree {
@@ -42,12 +43,24 @@ public:
     QTree();
     QTree(QTCorners area);
     ~QTree();
+
     QTree QTreeMake(TimacFile file);
+
     int insert(QTNode *node);
     QTNode* search(QTNodePos pos);
     bool contain(QTNodePos pos);
-    void display();
     QTCorners get_area();
+
+    void display();
+    void displayDebug();
+
+    bool isViewed();
+
+    void linkLeft(QTree *left);
+    void linkRight(QTree *right);
+    void linkTop(QTree *top);
+    void linkBot(QTree *bot);
+    void linkCenter();
 };
 
 #endif
