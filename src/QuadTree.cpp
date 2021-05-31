@@ -49,17 +49,6 @@ void QTNode::display(){
     }
 }
 
-void QTNode::displayD(){
-    if(this != NULL){
-        float height = this->height;
-        if(height <= 50){glColor3f(0, 0, height/255 +.3);}
-        else if(height <= 80){glColor3f(height/255, height/255,0);}
-        else if(height >= 210){glColor3f(height/255, height/255, height/255);}
-        else{glColor3f(0, height/255,0);}
-        glVertex3f(this->pos.x + 20, height/10 -25.5, this->pos.y);
-    }
-}
-
 QTree::QTree(){
     this->area = QTCornersMake(0,0,0,0);
     this->qtnode = NULL;
@@ -92,6 +81,7 @@ QTCorners QTree::get_area(){
     return this->area;
 }
 
+
 int QTree::insert(QTNode *node){
 
     if(node == NULL){return 1;}
@@ -108,22 +98,22 @@ int QTree::insert(QTNode *node){
             if(this->nW == NULL){
                 this->nW = new QTree(QTCornersMake(this->area.x1,
                                                     this->area.y1,
-                                                    (this->area.x1 + this->area.x2)/2,
-                                                    (this->area.y1 + this->area.y2)/2 ));
+                                                    ((this->area.x1 + this->area.x2)/2),
+                                                    ((this->area.y1 + this->area.y2)/2)));
             }
             this->nW->insert(node);
         } 
         if((this->area.y1 + this->area.y2) / 2 <= node->pos.y){
             if(this->sW == NULL){
                 this->sW = new QTree(QTCornersMake(this->area.x1,
-                                                    (this->area.y1 + this->area.y2)/2,
-                                                    (this->area.x1 + this->area.x2)/2,
+                                                    ((this->area.y1 + this->area.y2)/2),
+                                                    ((this->area.x1 + this->area.x2)/2),
                                                     this->area.y2));
             }
             this->sW->insert(node);
         }
     }
-    if((this->area.x1 + this->area.x2)/2 <= node->pos.x){
+    if((this->area.x1 + this->area.x2) / 2 <= node->pos.x){
         if((this->area.y1 + this->area.y2) / 2 >= node->pos.y){
             if(this->nE == NULL){
                 this->nE = new QTree(QTCornersMake((this->area.x1 + this->area.x2)/2,
@@ -133,7 +123,7 @@ int QTree::insert(QTNode *node){
             }
             this->nE->insert(node);
         }
-        if((this->area.y1 + this->area.y2)/2 <= node->pos.y){
+        if((this->area.y1 + this->area.y2) / 2 <= node->pos.y){
             if(this->sE == NULL){
                 this->sE = new QTree(QTCornersMake((this->area.x1 + this->area.x2)/2 ,
                                                     (this->area.y1 + this->area.y2)/2 ,
@@ -180,10 +170,12 @@ bool QTree::contain(QTNodePos pos){
 bool QTree::isViewed(){
     if(this==NULL){return true;}
 
-    Vec3 p1(this->area.x1, this->search(QTNodePosMake(this->area.x1,this->area.y1))->height, this->area.y1);
-    Vec3 p2(this->area.x2, this->search(QTNodePosMake(this->area.x2,this->area.y2))->height, this->area.y2);
+    Vec3 p1(this->area.x1, 255/10 -25, this->area.y1);
+    Vec3 p2(this->area.x2, -25, this->area.y2);
+    Vec3 p3(this->area.x1, 0, this->area.y2);
+    Vec3 p4(this->area.x2, 0, this->area.y1);
 
-    if(frustrum.pointInFrustum(p1)==1 || frustrum.pointInFrustum(p2)==1){return true;}
+    if(frustrum.pointInFrustum(p1)==1 || frustrum.pointInFrustum(p2)==1 || frustrum.pointInFrustum(p3)==1 || frustrum.pointInFrustum(p4)==1){return true;}
     if( frustrum.pl[0].distance(p1)*frustrum.pl[1].distance(p2)>=0 &&
         frustrum.pl[4].distance(p1)*frustrum.pl[5].distance(p2)>=0 &&
         frustrum.pl[2].distance(p1)*frustrum.pl[3].distance(p2)>=0   ){return true;}
@@ -191,41 +183,146 @@ bool QTree::isViewed(){
 }
 
 void QTree::display(){
-    if(this->nW->qtnode != NULL){
-        this->nW->qtnode->display();
-        this->nE->qtnode->display();
-        this->sE->qtnode->display();
+    // std::cout << "(" << this->area.x1 << "," << this->area.y1 <<")(" <<
+    //                     this->area.x2 << "," << this->area.y2 << ") " <<
+    //                     this->nW << ", " << this->nE << ", " << this->sE << ", " << this->sW << std::endl;
+    if(this->isViewed()){
+        if(this->nW->qtnode != NULL){
+            glBegin(GL_TRIANGLES);
+            this->nW->qtnode->display();
+            this->nE->qtnode->display();
+            this->sE->qtnode->display();
 
-        this->sE->qtnode->display();
-        this->nW->qtnode->display();
-        this->sW->qtnode->display();
-    } else {
-        if(this->nW != NULL){
-            this->nW->display();
-        }
-        if(this->nE != NULL){
-            this->nE->display();
-        }
-        if(this->sE != NULL){
-            this->sE->display();
-        }
-        if(this->sW != NULL){
-            this->sW->display();
+            this->sE->qtnode->display();
+            this->nW->qtnode->display();
+            this->sW->qtnode->display();
+            glEnd();
+        } else {
+            bool hg, hd, bd, bg;
+            hg = hd = bd = bg = false;
+            if(this->nW != NULL){
+                this->nW->display();
+                hg = true;
+            }
+            if(this->nE != NULL){
+                this->nE->display();
+                hd = true;
+            }
+            if(this->sE != NULL){
+                this->sE->display();
+                bd = true;
+            }
+            if(this->sW != NULL){
+                this->sW->display();
+                bg = true;
+            }
+            if(hg || hd){this->nW->linkRight(nE);}
+            if(hg || bg){this->nW->linkBot(sW);}
+            if(bd || hd){this->sE->linkTop(nE);}
+            if(bd || bg){this->sE->linkLeft(sW);}
+            this->linkCenter();
+            
         }
     }
 }
 
+void QTree::linkRight(QTree *right){
+    for(int yl= this->area.y1; yl<=this->area.y2; yl++){
+        glBegin(GL_TRIANGLES);
+        this->search(QTNodePosMake(this->area.x2,yl))->display();
+        right->search(QTNodePosMake(this->area.x2+1,yl))->display();
+        right->search(QTNodePosMake(this->area.x2+1,yl+1))->display();
 
-// void QTree::displayDebug(){    
-//     for(int x=this->area.x1; x<=this->area.x2; x++){
-//         for(int y=this->area.y1; y<=this->area.y2; y++){
-//             drawTriangle(this->search(QTNodePosMake(x+1,y)),
-//                         this->search(QTNodePosMake(x+1,y+1)),
-//                         this->search(QTNodePosMake(x,y)));
+        right->search(QTNodePosMake(this->area.x2+1,yl+1))->display();
+        this->search(QTNodePosMake(this->area.x2,yl))->display();
+        this->search(QTNodePosMake(this->area.x2,yl+1))->display();
+        glEnd();
+    }
+}
 
-//             drawTriangle(this->search(QTNodePosMake(x,y)),
-//                         this->search(QTNodePosMake(x,y+1)),
-//                         this->search(QTNodePosMake(x+1,y+1)));
-//         }
-//     }
-// }
+void QTree::linkLeft(QTree *left){
+    for(int yl= this->area.y1; yl<=this->area.y2; yl++){
+        glBegin(GL_TRIANGLES);
+        this->search(QTNodePosMake(this->area.x1,yl))->display();
+        left->search(QTNodePosMake(this->area.x1-1,yl))->display();
+        left->search(QTNodePosMake(this->area.x1-1,yl+1))->display();
+
+        left->search(QTNodePosMake(this->area.x1-1,yl+1))->display();
+        this->search(QTNodePosMake(this->area.x1,yl))->display();
+        this->search(QTNodePosMake(this->area.x1,yl+1))->display();
+        glEnd();
+    }
+}
+
+void QTree::linkTop(QTree *top){
+    for(int xl= this->area.x1; xl<=this->area.x2; xl++){
+        glBegin(GL_TRIANGLES);
+        this->search(QTNodePosMake(xl,this->area.y1))->display();
+        top->search(QTNodePosMake(xl,this->area.y1-1))->display();
+        top->search(QTNodePosMake(xl+1,this->area.y1-1))->display();
+
+        top->search(QTNodePosMake(xl+1,this->area.y1-1))->display();
+        this->search(QTNodePosMake(xl,this->area.y1))->display();
+        this->search(QTNodePosMake(xl+1,this->area.y1))->display();
+        glEnd();
+    }
+}
+
+void QTree::linkBot(QTree *bot){
+    for(int xl= this->area.x1; xl<=this->area.x2; xl++){
+        glBegin(GL_TRIANGLES);
+        this->search(QTNodePosMake(xl,this->area.y2))->display();
+        bot->search(QTNodePosMake(xl,this->area.y2+1))->display();
+        bot->search(QTNodePosMake(xl+1,this->area.y2+1))->display();
+
+        bot->search(QTNodePosMake(xl+1,this->area.y2+1))->display();
+        this->search(QTNodePosMake(xl,this->area.y2))->display();
+        this->search(QTNodePosMake(xl+1,this->area.y2))->display();
+        glEnd();
+    }
+}
+
+void QTree::linkCenter(){
+    	glBegin(GL_TRIANGLES);
+        this->search(QTNodePosMake(this->area.x2/2, this->area.y2/2))->display();
+        this->search(QTNodePosMake(this->area.x2/2 +1, this->area.y2/2))->display();
+        this->search(QTNodePosMake(this->area.x2/2 +1, this->area.y2/2 +1))->display();
+
+        this->search(QTNodePosMake(this->area.x2/2 +1, this->area.y2/2 +1))->display();
+        this->search(QTNodePosMake(this->area.x2/2, this->area.y2/2 +1))->display();
+        this->search(QTNodePosMake(this->area.x2/2, this->area.y2/2))->display();
+        glEnd();
+}
+
+void QTree::smolQuad(){
+    
+}
+
+
+void QTree::displayDebug(){    
+    for(int x=this->area.x1; x<=this->area.x2; x++){
+        for(int y=this->area.y1; y<=this->area.y2; y++){
+            Vec3 p(x, this->search(QTNodePosMake(x,y))->height/255 -25, y);
+            if(frustrum.pointInFrustum(p)==1){
+                glBegin(GL_TRIANGLES);
+                this->search(QTNodePosMake(x+1,y))->display();
+                this->search(QTNodePosMake(x+1,y+1))->display();
+                this->search(QTNodePosMake(x,y))->display();
+
+                this->search(QTNodePosMake(x,y))->display();
+                this->search(QTNodePosMake(x,y+1))->display();
+                this->search(QTNodePosMake(x+1,y+1))->display();
+                glEnd();
+
+                //This Works but no light + no lod = laggy and ugly
+                // drawtriangle(this->search(QTNodePosMake(x+1,y)),
+                //             this->search(QTNodePosMake(x+1,y+1)),
+                //             this->search(QTNodePosMake(x,y)));
+
+                // drawtriangle(this->search(QTNodePosMake(x,y)),
+                //             this->search(QTNodePosMake(x,y+1)),
+                //             this->search(QTNodePosMake(x+1,y+1)));
+            }
+        }
+    }
+}

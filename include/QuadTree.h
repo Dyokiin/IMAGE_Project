@@ -58,6 +58,7 @@ public:
 
     void display();
     void displayDebug();
+    void smolQuad();
 
     bool isViewed();
 

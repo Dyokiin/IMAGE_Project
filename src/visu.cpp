@@ -32,11 +32,16 @@ Vec3 pos;
 Vec3 lat;
 Vec3 upv;
 
+float modelview[16];
+
+bool debug = false;
+
 
 /* Global Class */
 QTree *qtree;
 Skybox* skybx;
 FrustumG frustrum;
+Tree *yggdrasil;
 
 
 /*********************************************************/
@@ -67,15 +72,31 @@ static void drawFunc() {
 
 	glPushMatrix();
 
-	glBegin(GL_TRIANGLES);
-	qtree->display();
-	//qtree->displayDebug();
-	glEnd();
+	if(debug){qtree->displayDebug();}
+	else {qtree->display();}
 
+	//tentative de billboard, pour que la texture soit toujours perpendiculaire au plan de la caméra//
+	glPushMatrix();
+		glGetFloatv(GL_MODELVIEW_MATRIX, modelview);
+		for(int i=0; i<3;i++){
+			for(int j=0; j<3; j++){
+				if(i==j){
+					modelview[i*4+j] = 1.0;
+				} else {
+					modelview[i*4+j] = 0.0;
+				}
+			}
+		}
+		glLoadMatrixf(modelview);
+		yggdrasil->Display(10, qtree->search(QTNodePosMake(10,10))->height/10 -25, 10);
+	glPopMatrix();
+	// **********************//
 
+	glPushMatrix();
 	glDepthMask(GL_FALSE);
 	skybx->Display();
 	glDepthMask(GL_TRUE);
+	glPopMatrix();
 
 	/* Fin du dessin */
 	glPopMatrix();
@@ -101,8 +122,8 @@ static void reshapeFunc(int width,int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	/* définition de la camera */
-	gluPerspective( 60.0, h, 0.01, 1000.0 );
-	frustrum.setCamInternals(70.0, h, 0.01, 1000.0);			// Angle de vue, rapport largeur/hauteur, near, far
+	gluPerspective( 60.0, h, 0.01, 700.0 );
+	frustrum.setCamInternals(70.0, h, 0.01, 700.0);			// Angle de vue, rapport largeur/hauteur, near, far
 
 	/* Retour a la pile de matrice Modelview
 			et effacement de celle-ci */
@@ -135,6 +156,9 @@ static void kbdFunc(unsigned char c, int x, int y) {
 			offx-=5*(-xp);
 			//offy-=5*(-yp);
 			offz-=5*(-z);
+			break;
+		case 'A' : case 'a' :
+			debug = !debug;
 			break;
 		case 32 :
 			offy+=0.5;
@@ -214,6 +238,8 @@ static void init() {
 	skybx = new Skybox();
 	skybx->Bind();
 
+	yggdrasil = new Tree();
+
 	loadGrass();
 }
 
@@ -254,4 +280,9 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 	/* Cette partie du code n'est jamais atteinte */
 	return 0;
+}
+
+
+void drawtriangle(QTNode *n1, QTNode *n2, QTNode *n3){
+	drawTriangle(n1,n2,n3);
 }

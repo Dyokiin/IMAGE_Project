@@ -13,13 +13,12 @@ void loadGrass();
 void drawTriangle(QTNode *n1, QTNode *n2, QTNode *n3);
 
 class Tree {
-private :
+public :
     GLuint texture;
 public :
     Tree();
     Tree(QTNode* Node);
-    void Display();
-    void Bind();
+    void Display(float x, float y, float z);
 };
 
 class Skybox {
@@ -35,6 +34,8 @@ public :
     void Display();
     void Bind();
 };
+
+void drawTriangle(QTNode n1, QTNode n2, QTNode n3);
 
 
 #endif
