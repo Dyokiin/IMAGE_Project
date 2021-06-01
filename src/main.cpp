@@ -34,7 +34,7 @@ Vec3 upv;
 
 float modelview[16];
 
-bool debug = false;
+int debug = 0;
 
 
 /* Global Class */
@@ -72,7 +72,8 @@ static void drawFunc() {
 
 	glPushMatrix();
 
-	if(debug){qtree->displayDebug();}
+	if(debug==1){qtree->displayDebug();}
+	else if(debug==2){qtree->displayTex();}
 	else {qtree->display();}
 
 	//tentative de billboard, pour que la texture soit toujours perpendiculaire au plan de la caméra//
@@ -158,7 +159,13 @@ static void kbdFunc(unsigned char c, int x, int y) {
 			offz-=5*(-z);
 			break;
 		case 'A' : case 'a' :
-			debug = !debug;
+			debug = 1;
+			break;
+		case 'E' : case 'e' :
+			debug = 2;
+			break;
+		case 'R' : case 'r' :
+			debug = 0;
 			break;
 		case 32 :
 			offy+=0.5;

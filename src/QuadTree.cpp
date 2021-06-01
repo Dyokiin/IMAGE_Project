@@ -313,16 +313,27 @@ void QTree::displayDebug(){
                 this->search(QTNodePosMake(x,y+1))->display();
                 this->search(QTNodePosMake(x+1,y+1))->display();
                 glEnd();
-
-                // This Works but no light + no lod = laggy and ugly
-                // drawTriangle(this->search(QTNodePosMake(x+1,y)),
-                //             this->search(QTNodePosMake(x+1,y+1)),
-                //             this->search(QTNodePosMake(x,y)));
-
-                // drawTriangle(this->search(QTNodePosMake(x,y)),
-                //             this->search(QTNodePosMake(x,y+1)),
-                //             this->search(QTNodePosMake(x+1,y+1)));
             }
         }
     }
+}
+
+                //This Works but no light + no lod = laggy and ugly
+void QTree::displayTex(){
+    for(int x=this->area.x1; x<=this->area.x2; x++){
+        for(int y=this->area.y1; y<=this->area.y2; y++){
+            Vec3 p(x, this->search(QTNodePosMake(x,y))->height/255 -25, y);
+            if(frustrum.pointInFrustum(p)==1){
+
+                drawTriangle(this->search(QTNodePosMake(x+1,y)),
+                            this->search(QTNodePosMake(x+1,y+1)),
+                            this->search(QTNodePosMake(x,y)));
+
+                drawTriangle(this->search(QTNodePosMake(x,y)),
+                            this->search(QTNodePosMake(x,y+1)),
+                            this->search(QTNodePosMake(x+1,y+1)));
+            }
+        }
+    }
+                  
 }
