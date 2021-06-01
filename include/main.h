@@ -4,6 +4,8 @@
 #define STEP_ANGLE	M_PI/90.
 #define STEP_PROF	M_PI/90.
 
+class QTNode;
+
 /* variables globales pour la gestion de la caméra */
 extern float profondeur;
 extern float latitude;

@@ -1,26 +1,24 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-
 #include <string>
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <GL/gl.h>
-#include "QuadTree.h"
 
 
+class QTNode;
+
+void loadGrass();
+void drawTriangle(QTNode *n1, QTNode *n2, QTNode *n3);
 
 class Tree {
-private :
+public :
     GLuint texture;
-    QTNodePos pos;
 public :
     Tree();
     Tree(QTNode* Node);
-    QTNodePos Get_pos();
-    QTNodePos Set_pos(QTNodePos pos);
-    void Display();
-    void Bind();
+    void Display(float x, float y, float z);
 };
 
 class Skybox {
@@ -36,6 +34,8 @@ public :
     void Display();
     void Bind();
 };
+
+void drawTriangle(QTNode n1, QTNode n2, QTNode n3);
 
 
 #endif

@@ -2,6 +2,10 @@
 #define QUADTREE_H
 
 #include "ImgFile.h"
+#include <GL/glut.h>
+#include <GL/glu.h>
+#include <GL/gl.h>
+
 
 
 typedef struct QTNodePos {
@@ -54,6 +58,7 @@ public:
 
     void display();
     void displayDebug();
+    void smolQuad();
 
     bool isViewed();
 
@@ -63,5 +68,6 @@ public:
     void linkBot(QTree *bot);
     void linkCenter();
 };
+
 
 #endif
