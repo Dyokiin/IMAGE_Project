@@ -4,7 +4,7 @@
 #include <GL/gl.h>
 #include <iostream>
 #include "../include/texture.h"
-#include "../include/visu.h"
+#include "../include/main.h"
 #include "../include/QuadTree.h"
 
 Skybox::Skybox(){

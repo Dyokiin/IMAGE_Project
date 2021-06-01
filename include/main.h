@@ -14,6 +14,4 @@ extern float offx;
 extern float offy;
 extern float offz;
 
-void drawtriangle(QTNode *n1, QTNode *n2, QTNode *n3);
-
 #endif

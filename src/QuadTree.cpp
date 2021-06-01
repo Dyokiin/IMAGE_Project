@@ -314,12 +314,12 @@ void QTree::displayDebug(){
                 this->search(QTNodePosMake(x+1,y+1))->display();
                 glEnd();
 
-                //This Works but no light + no lod = laggy and ugly
-                // drawtriangle(this->search(QTNodePosMake(x+1,y)),
+                // This Works but no light + no lod = laggy and ugly
+                // drawTriangle(this->search(QTNodePosMake(x+1,y)),
                 //             this->search(QTNodePosMake(x+1,y+1)),
                 //             this->search(QTNodePosMake(x,y)));
 
-                // drawtriangle(this->search(QTNodePosMake(x,y)),
+                // drawTriangle(this->search(QTNodePosMake(x,y)),
                 //             this->search(QTNodePosMake(x,y+1)),
                 //             this->search(QTNodePosMake(x+1,y+1)));
             }

@@ -14,7 +14,7 @@
 #include <GL/glu.h>
 #include <GL/gl.h>
 
-#include "../include/visu.h"
+#include "../include/main.h"
 #include "../include/QuadTree.h"
 #include "../include/texture.h"
 #include "../include/frustrum.h"
@@ -282,7 +282,3 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
-
-void drawtriangle(QTNode *n1, QTNode *n2, QTNode *n3){
-	drawTriangle(n1,n2,n3);
-}
